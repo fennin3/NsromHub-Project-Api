@@ -1,0 +1,129 @@
+<div class="container">
+  <div class="card card-custom bg-gray-100 card-stretch gutter-b">
+    <!--begin::Header-->
+    <div class="card-header border-0 bg-primary py-5">
+      <h3 class="card-title font-weight-bolder text-white">Overall Action Plan Summary</h3>
+      <div class="card-toolbar">
+        <div class="dropdown dropdown-inline">
+          <a
+            href="#"
+            class="btn btn-transparent-white btn-sm font-weight-bolder dropdown-toggle px-5"
+            id="current_year"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          ></a>
+          <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <!--begin::Navigation-->
+            <ul class="navi navi-hover" id="year_holder"></ul>
+            <!--end::Navigation-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body p-0 position-relative overflow-hidden">
+      <!--begin::Chart-->
+      <div id="ov_action_sum" class="d-flex justify-content-center"></div>
+      <!--end::Chart-->
+
+
+      <!--end::Body-->
+    </div>
+  </div>
+</div>
+
+<script>
+  var showChart = (date) => {
+    var primary = "#6993FF";
+    var success = "#1BC5BD";
+    var info = "#8950FC";
+    var warning = "#FFA800";
+    var danger = "#F64E60";
+    var apexChart = "#ov_action_sum";
+
+    $.get(
+      `https://ceap.herokuapp.com/mp-operations/action-plan-overall-summary/${user_details.system_id_for_user}/${date}/`,
+      function (data) {
+
+        if (data.status === 200) {
+          $("#ov_action_sum").html("");
+
+          var options = {
+            series: data.data.total_ratings,
+            chart: {
+              width: 500,
+              type: "pie",
+            },
+            labels: data.data.problem_titles,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 500,
+                  },
+                  noData: {
+                    text: "No Data...",
+                  },
+                  legend: {
+                    position: "bottom",
+                  },
+                },
+              },
+            ],
+            colors: [primary, success, warning, danger, info],
+          };
+
+          var chart = new ApexCharts(
+            document.querySelector(apexChart),
+            options
+          );
+
+          chart.render();
+
+        }
+      }
+    );
+  };
+
+
+  var current_date = new Date();
+
+  $("#current_year").text(current_date.getFullYear());
+
+  showChart(current_date.getFullYear());
+
+  $.get(
+    "https://ceap.herokuapp.com/constituent-operations/retrieve-years/",
+    function (data) {
+      console.log("datayears", data);
+      if (data.status === 200) {
+        var years = data.years,
+          year_holder = $("#year_holder");
+
+        if (years.length > 0) {
+          year_holder.html("");
+
+          for (let year in years) {
+            year_holder.append(`
+
+            <li class="navi-item">
+            <a href="#" class="navi-link" onclick="changeYear(this)" data-year="${years[year]}">
+
+            <span class="navi-text">${years[year]}</span>
+            </a>
+            </li>`);
+          }
+        }
+      }
+    }
+  );
+
+  var changeYear = ($this) => {
+    var new_date = $($this).data("year");
+
+    showChart(new_date);
+  };
+</script>

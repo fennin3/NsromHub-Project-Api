@@ -1,0 +1,305 @@
+
+<div class="container">
+
+    <div class="card card-custom gutter-b" >
+       <div class="card-header border-0 bg-primary py-5">
+      <h3 class="card-title font-weight-bolder text-white">Assessment Summary</h3>
+      <div class="card-toolbar">
+
+        <div class="dropdown dropdown-inline">
+          <a
+            href="#"
+            class="btn btn-transparent-white btn-sm font-weight-bolder dropdown-toggle px-5"
+            id="current_year"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          ></a>
+          <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <!--begin::Navigation-->
+            <ul class="navi navi-hover" id="year_holder"></ul>
+            <!--end::Navigation-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div class="card-body" >
+          <div class="card card-custom gutter-b">
+    <div class="card-header card-header-tabs-line">
+        <div class="card-toolbar">
+            <ul class="nav nav-tabs nav-bold nav-tabs-line justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#project_assessment">Project Assessment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#conduct_assessment">Conduct Assessment</a>
+                </li>
+               
+            </ul>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="project_assessment" role="tabpanel" aria-labelledby="kt_tab_pane_2">
+               <div class="row" id="project_assessments">
+
+               </div>
+            </div>
+            <div class="tab-pane fade" id="conduct_assessment" role="tabpanel" aria-labelledby="kt_tab_pane_2">
+               <div class="row" id="conduct_assessments">
+
+               </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+       <div class="row" id="summary_body">
+		
+	</div>
+
+
+</div>
+</div>
+</div>
+<script>
+    var current_date = new Date();
+ var year = current_date.getFullYear();
+
+$("#current_year").text( current_date.getFullYear());
+ $.get(
+    "https://ceap.herokuapp.com/constituent-operations/retrieve-years/",
+    function (data) {
+      if (data.status === 200) {
+        var years = data.years,
+          year_holder = $("#year_holder");
+
+        if (years.length > 0) {
+          year_holder.html("");
+
+          for (let year in years) {
+            year_holder.append(`
+
+            <li class="navi-item">
+            <a href="#" class="navi-link" onclick="changeYear(this)" data-year="${years[year]}">
+
+            <span class="navi-text">${years[year]}</span>
+            </a>
+            </li>`);
+          }
+        }
+      }
+    }
+  );
+
+  var changeYear = ($this) => {
+    var new_date = $($this).data("year");
+
+    showSummary(new_date);
+  };
+  var showSummary = year => {
+   $.ajax({
+    url: `https://ceap.herokuapp.com/mp-operations/retrieve-assessment-summary/${user_details.system_id_for_user}/${year}/`,
+    method: "GET",
+    cache: false,
+    dataType: "json",
+    beforeSend: function () {
+
+      KTApp.block('#summary_body', {
+        overlayColor: 'blue',
+        opacity: 0.1,
+        state: 'primary'
+      });
+    },
+    success: function (data) {
+      if (data.status === 200) {
+            var projs_sum = data.projects_assessment, cond_sum = data.conduct_assessment;
+
+            var project_data = $("#project_assessments"), conduct_data = $("#conduct_assessments");
+        if (projs_sum.length >  0 && cond_sum.length > 0) {
+
+          project_data.html('');
+          conduct_data.html('');
+          for (let p in projs_sum) {
+             project_data.append(`
+             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+
+<div class="card card-custom gutter-b card-stretch">
+
+<div class="card-body text-center pt-4">
+
+<div class="my-4">
+<a href="javascript:void(0)" class="text-dark font-weight-bold text-hover-primary font-size-h4">${projs_sum[p].project_title}</a>
+</div>
+
+<div class="mt-7  container-fluid">
+ <div id="___${projs_sum[p].id}" class="d-flex justify-content-center"></div>
+</div>
+
+</div>
+</div>
+</div>
+<script>
+ var primary = "#6993FF";
+    var success = "#1BC5BD";
+    var info = "#8950FC";
+    var warning = "#FFA800";
+    var danger = "#F64E60";
+    var s_data = "${projs_sum[p].assessment_values}";
+    var l_data = "${projs_sum[p].assessement_names}";
+    s_data = s_data.split(',').map(x=>+x);
+    l_data = l_data.split(',');
+ var apexChart = "#___${projs_sum[p].id}";
+  var options = \{
+            series: s_data,
+            chart: {
+              width: 380,
+              type: "donut",
+            },
+            labels: l_data,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 200,
+                  },
+                  noData: {
+                    text: "No Data...",
+                  },
+                  legend: {
+                    position: "bottom",
+                  },
+                },
+              },
+            ],
+            colors: [primary, success, warning, danger, info],
+          };
+
+          var chart = new ApexCharts(
+            document.querySelector(apexChart),
+            options
+          );
+
+          chart.render();
+<\/script>
+
+             `)
+
+          }
+
+           for (let c in cond_sum) {
+             conduct_data.append(`
+             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
+
+<div class="card card-custom gutter-b card-stretch">
+
+<div class="card-body text-center pt-4">
+
+<div class="my-4">
+<a href="javascript:void(0)" class="text-dark font-weight-bold text-hover-primary font-size-h4">${cond_sum[c].conduct}</a>
+</div>
+
+<div class="mt-7">
+ <div id="____${cond_sum[c].id}" class="d-flex justify-content-center"></div>
+</div>
+
+</div>
+</div>
+</div>
+<script>
+ var primary = "#6993FF";
+    var success = "#1BC5BD";
+    var info = "#8950FC";
+    var warning = "#FFA800";
+    var danger = "#F64E60";
+    var c_data = "${cond_sum[c].assessment_value}";
+    var cl_data = "${cond_sum[c].assessment_names}";
+
+    c_data = c_data.split(',').map(x=>+x);
+   cl_data = cl_data.split(',');
+ var apexChart = "#____${cond_sum[c].id}";
+  var options = \{
+            series: c_data,
+            chart: {
+              width: 380,
+              type: "donut",
+            },
+            labels: cl_data,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 200,
+                  },
+                  noData: {
+                    text: "No Data...",
+                  },
+                  legend: {
+                    position: "bottom",
+                  },
+                },
+              },
+            ],
+            colors: [primary, success, warning, danger, info],
+          };
+
+          var chart = new ApexCharts(
+            document.querySelector(apexChart),
+            options
+          );
+
+          chart.render();
+<\/script>
+             `)
+
+          }
+
+
+
+        }else {
+          project_data.html(`
+              <div class="d-flex justify-content-between flex-column h-100">
+                <p>No Assessment has been submitted for this year </p>
+              </div>
+            `);
+           conduct_data.html(`
+              <div class="d-flex justify-content-between flex-column h-100">
+                <p>No Assessment has been submitted for this year </p>
+              </div>
+            `);
+        }
+
+      } else {
+        swal.fire({
+          text: data.message,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn font-weight-bold btn-light-danger",
+          },
+        });
+      }
+
+      KTApp.unblock("#summary_body");
+    },
+    error: function (error) {
+      console.log("error", error);
+      swal.fire({
+        text: `An error occurred and that is all we know`,
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Ok, got it!",
+        customClass: {
+          confirmButton: "btn font-weight-bold btn-light-danger",
+        },
+      });
+      KTApp.unblock("#summary_body");
+    },
+  });
+ }
+ showSummary(year);
+</script>

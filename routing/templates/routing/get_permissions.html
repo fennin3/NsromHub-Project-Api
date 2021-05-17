@@ -1,0 +1,89 @@
+<form method="POST" class="permissionForm">
+  {% for i in all_permissions %}
+
+  <div class="form-group mb-0 row align-items-center">
+   <label class="col-8 col-form-label">   {{i.name}} : </label>
+   <div class="col-4 d-flex justify-content-end">
+    <span class="switch switch-success switch-sm">
+     <label>
+      <input type="checkbox"
+      onchange="setPermission(this)"
+      data-perm_name = "{{ i.name }}"
+      data-id = "{{ id }}"
+      {% for p in permission %}
+      {% if p.permission_name == i.name %}
+      {% if p.permission_value %}
+          checked="checked"
+        {% endif %}
+      {% endif %}
+      {% endfor %}
+      >
+      <span></span>
+    </label>
+  </span>
+</div>
+</div>
+{% endfor %}
+</form>
+<script>
+
+  $('.permission-title').text('{{ user.full_name }}\'s Permissions');
+
+  var setPermission = $this => {
+
+    var perm_value = $($this).is(':checked'), perm_name = $($this).data('perm_name'), uid = $($this).data('id');
+
+    var endpoint = `https://ceap.herokuapp.com/mp-operations/set-permission/${uid}/`;
+    $.ajax({
+      url: endpoint,
+      method: "POST",
+      contentType:"application/json",
+      data:JSON.stringify({
+        perm_name,
+        perm_value,
+      }),
+      cache: false,
+      processData: false,
+      dataType: "json",
+      beforeSend: function () {
+        $($this).hide();
+      },
+      success: function (data) {
+        $($this).show();
+          toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+          };
+
+        if (data.status === 200){
+        
+          toastr.success(data.message);
+
+        } else {
+            toastr.error(data.message);
+
+        }
+
+      },
+      error: function (error) {
+        console.log("error", error);
+         $($this).show();
+        alert('an error occurred and that is all we know');
+
+      },
+    });
+  }
+</script>

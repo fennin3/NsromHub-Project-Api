@@ -1,0 +1,267 @@
+<div class="container">
+  <div class="card card-custom">
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+      <div class="card-title">
+        <h3 class="card-label">
+          Projects
+          <span class="d-block text-muted pt-2 font-size-sm"
+            >view projects</span
+          >
+        </h3>
+      </div>
+    </div>
+    <div class="card-body can-view">
+      <div class="mb-7">
+        <div class="row align-items-center">
+          <div class="col-lg-9 col-xl-8">
+            <div class="row align-items-center">
+              <div class="col-md-12 my-2 my-md-0">
+                <div class="input-icon">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Search..."
+                    id="cb_datatable_search_query"
+                  />
+                  <span>
+                    <i class="flaticon2-search-1 text-muted"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-xl-4 mt-5 mt-lg-0">
+            <a
+              href="javascript:void(0)"
+              id="cb_datatable_reload"
+              class="btn btn-light-primary px-6 font-weight-bold"
+              >Reload</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="datatable datatable-bordered datatable-head-custom"
+        id="cb_datatable"
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="editContact"
+  data-backdrop="static"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="staticBackdrop"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title contact-title" id="exampleModalLabel"></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <i aria-hidden="true" class="ki ki-close"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="contactBody"></div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-light-primary font-weight-bold"
+          data-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  "use strict";
+  // Class definition
+
+  var CBCustomerNotifications = (function () {
+    // Private functions
+    var notifications = function () {
+      var datatable = $("#cb_datatable").KTDatatable({
+        // datasource definition
+        data: {
+          type: "remote",
+          source: `https://ceap.herokuapp.com/mp-operations/list-mp-projects-cust/${user_details.system_id_for_user}/`,
+          pageSize: 10,
+        },
+        layout: {
+          scroll: false,
+          footer: false,
+        },
+        sortable: true,
+
+        pagination: true,
+
+        search: {
+          input: $("#cb_datatable_search_query"),
+          key: "generalSearch",
+        },
+
+        // columns definition
+        columns: [
+          {
+            field: "id",
+            title: "#",
+            sortable: "asc",
+            width: 30,
+            type: "number",
+            selector: false,
+            textAlign: "center",
+          },
+          {
+            field: "name",
+            title: "Name",
+          },
+          {
+            field: "place",
+            title: "Place",
+          },
+          {
+            field: "date_posted",
+            title: "Date",
+            template: (row) => {
+              return `${formatAMPM(row.date_posted)}`;
+            },
+          },
+        ],
+      });
+
+      $("#cb_datatable_reload").on("click", function () {
+        datatable.reload();
+      });
+    };
+
+    return {
+      // public functions
+      init: function () {
+        notifications();
+      },
+    };
+  })();
+
+  jQuery(document).ready(function () {
+    CBCustomerNotifications.init();
+  });
+  var arrows = {
+    leftArrow: '<i class="la la-angle-left"></i>',
+    rightArrow: '<i class="la la-angle-right"></i>',
+  };
+  function editContact(tthis) {
+    var edit_id = $(tthis).data("id");
+
+    $.ajax({
+      url: "http://xtailor.eu-4.evennode.com/page",
+      type: "POST",
+      data: JSON.stringify({ edit_id: edit_id, callback: "contact/edit" }),
+      contentType: "application/json; charset=UTF-8",
+      dataType: "json",
+      cache: false,
+      processData: false,
+      beforeSend: function () {
+        KTApp.blockPage({
+          overlayColor: "#000000",
+          state: "primary",
+          message: "Please Wait...",
+        });
+      },
+      success: function (data) {
+        if (data.status === 200) {
+          $("#contactBody").html(data.message);
+          $("#editContact").modal("show");
+        } else {
+          swal.fire({
+            text: "An error occurred and that is all we know",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-primary",
+            },
+          });
+        }
+        KTApp.unblockPage();
+      },
+      error: function (error) {
+        console.error("an error occurred retry", error);
+        swal
+          .fire({
+            text: `Error ${error.message}`,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-danger",
+            },
+          })
+          .then(() => KTApp.unblockPage());
+      },
+    });
+  }
+  function deleteContact(tthis) {
+    var delete_id = $(tthis).data("id");
+
+    $.ajax({
+      url: "http://xtailor.eu-4.evennode.com/page",
+      type: "POST",
+      data: JSON.stringify({
+        delete_id: delete_id,
+        callback: "contact/delete",
+      }),
+      contentType: "application/json; charset=UTF-8",
+      dataType: "json",
+      cache: false,
+      processData: false,
+      beforeSend: function () {
+        KTApp.blockPage({
+          overlayColor: "#000000",
+          state: "primary",
+          message: "Please Wait...",
+        });
+      },
+      success: function (data) {
+        if (data.status === 200) {
+          $("#ajax_response").html(data.message);
+        } else {
+          swal.fire({
+            text: "An error occurred and that is all we know",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-primary",
+            },
+          });
+        }
+        KTApp.unblockPage();
+      },
+      error: function (error) {
+        console.error("an error occurred retry", error);
+        swal
+          .fire({
+            text: `Error ${error.message}`,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-danger",
+            },
+          })
+          .then(() => KTApp.unblockPage());
+      },
+    });
+  }
+</script>

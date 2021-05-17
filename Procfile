@@ -1,0 +1,1 @@
+web: gunicorn nsromahub_project_api.wsgi
