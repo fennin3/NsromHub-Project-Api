@@ -106,7 +106,7 @@
   });
 
   $.ajax({
-    url: `https://ceap.herokuapp.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
+    url: `https://nsrohub.herokuapp.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
     method: "POST",
     data: [],
     cache: false,
@@ -143,9 +143,9 @@
     var sendBtn = KTUtil.getById("compose_send"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
-    var endp = `https://ceap.herokuapp.com/mp-operations/mp-send-emails/`;
+    var endp = `https://nsrohub.herokuapp.com/mp-operations/mp-send-emails/`;
     if ($("#category") === "custom") {
-      endp = `https://ceap.herokuapp.com/mp-operations/mp-send-email/`;
+      endp = `https://nsrohub.herokuapp.com/mp-operations/mp-send-email/`;
     }
     var formData = new FormData(document.getElementById("compose_form"));
     $.ajax({

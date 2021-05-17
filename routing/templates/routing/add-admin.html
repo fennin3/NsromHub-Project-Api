@@ -230,7 +230,7 @@
         placeholder:'Select Area',
       });
 $.ajax({
-        url: 'https://ceap.herokuapp.com/users/all-countries/',
+        url: 'https://nsrohub.herokuapp.com/users/all-countries/',
         dataType: 'json',
         success: function (data) {
 
@@ -247,7 +247,7 @@ $.ajax({
 console.log('uuu',user_details)
 $.ajax({
 
-        url: `https://ceap.herokuapp.com/mp-operations/get-users-in-country/${user_details.active_constituency.country}/`,
+        url: `https://nsrohub.herokuapp.com/mp-operations/get-users-in-country/${user_details.active_constituency.country}/`,
         dataType: 'json',
         success: function (data) {
             if (data.status === 200) {
@@ -480,7 +480,7 @@ regions.on('change',function (e){
 
             validation.validate().then(function(status) {
               if (status == 'Valid') {
-                  var endpoint = `https://ceap.herokuapp.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/sub_admin/`;
+                  var endpoint = `https://nsrohub.herokuapp.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/sub_admin/`;
                  
                 var $this = $('#add_sub_admin_form'),  signUpBtn = KTUtil.getById('add_sub_admin'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
                 $.ajax({
@@ -558,7 +558,7 @@ $("#sub_form").on('submit', function(e){
   e.preventDefault();
 
 var uid = $("#suid").val();
-    var endpoint = `https://ceap.herokuapp.com/mp-operations/mp-make-subadmin/${user_details.system_id_for_user}/${uid}/`;
+    var endpoint = `https://nsrohub.herokuapp.com/mp-operations/mp-make-subadmin/${user_details.system_id_for_user}/${uid}/`;
                  
                 var  signUpBtn = KTUtil.getById('sub_send'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
                 $.ajax({

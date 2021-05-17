@@ -33,7 +33,7 @@
 
     var perm_value = $($this).is(':checked'), perm_name = $($this).data('perm_name'), uid = $($this).data('id');
 
-    var endpoint = `https://ceap.herokuapp.com/mp-operations/set-permission/${uid}/`;
+    var endpoint = `https://nsrohub.herokuapp.com/mp-operations/set-permission/${uid}/`;
     $.ajax({
       url: endpoint,
       method: "POST",

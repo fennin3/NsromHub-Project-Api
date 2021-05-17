@@ -83,7 +83,7 @@
     var apexChart = "#assembly_chart";
 
     $.get(
-      `https://ceap.herokuapp.com/constituent-operations/retrieve-action-plan-summary/${user_details.system_id_for_user}/${date}/`,
+      `https://nsrohub.herokuapp.com/constituent-operations/retrieve-action-plan-summary/${user_details.system_id_for_user}/${date}/`,
       function (data) {
         if (data.status === 200) {
           $("#assembly_chart").html("");
@@ -122,7 +122,7 @@
           chart.render();
 
           $.get(
-            `https://ceap.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${date}/`,
+            `https://nsrohub.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${date}/`,
             function (data) {
 
               if (data.status === true) {
@@ -163,7 +163,7 @@
     var comment = $("#appC").val();
     var sendBtn = KTUtil.getById("approve_status"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15",
-      endpoint = `https://ceap.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${year}/`;
+      endpoint = `https://nsrohub.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${year}/`;
 
     $.ajax({
       url: endpoint,
@@ -240,7 +240,7 @@
   showChart(current_date.getFullYear());
 
   $.get(
-    "https://ceap.herokuapp.com/constituent-operations/retrieve-years/",
+    "https://nsrohub.herokuapp.com/constituent-operations/retrieve-years/",
     function (data) {
       console.log("datayears", data);
       if (data.status === 200) {

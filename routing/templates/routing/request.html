@@ -51,7 +51,7 @@ $("form#request_form").on('submit',function(e){
 
 var  sendBtn =  KTUtil.getById('request_send'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
 
-    var endp = `https://ceap.herokuapp.com/constituent-operations/send-request-form/`;
+    var endp = `https://nsrohub.herokuapp.com/constituent-operations/send-request-form/`;
     var formData =  new FormData(document.getElementById('request_form'));
                 $.ajax({
                     url:endp,
