@@ -908,7 +908,7 @@ class RetrieveAssessmentView(APIView):
 
         data_projects = []
 
-        projects = Project.objects.filter(mp=user, date_posted__year=year)
+        projects = Project.objects.filter(mp=user, date_posted__year=year, is_post=False)
         conds = ConductsForAssessment.objects.all()
         
 
@@ -932,7 +932,8 @@ class RetrieveAssessmentView(APIView):
         
 
             data_projects.append({
-                "project_title":f"{project.name} at {project.place} on {project.date_posted}",
+                "id":project.id,
+                "project_title":f"{project.name} at {project.place} on {project.date_posted.strftime('%d %b, %Y')}",
                 "assessement_names":ass_names,
                 "assessment_values":ass_value
             })
@@ -962,6 +963,7 @@ class RetrieveAssessmentView(APIView):
 
             data_conduct.append(
                 {
+                "id":i.id,
                 "conduct":i.title,
                 "assessment_names":cond_names,
                 "assessment_value":cond_value
@@ -973,6 +975,7 @@ class RetrieveAssessmentView(APIView):
 
         
         return Response({
+            "status":status.HTTP_200_OK,
             "projects_assessment":data_projects,
             "conduct_assessment": data_conduct
         })
