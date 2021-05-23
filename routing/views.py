@@ -102,7 +102,8 @@ class SideBarView(APIView):
                     "user":user,
                     "is_constituent":user.is_constituent,
                     "is_mp":user.is_mp,
-                    "is_assemblyman":user.is_assembly_man
+                    "is_assemblyman":user.is_assembly_man,
+                    "is_subadmin": user.is_subadmin
                 }
                 
                 return Response(data, template_name=f"routing/{call_}.html")
