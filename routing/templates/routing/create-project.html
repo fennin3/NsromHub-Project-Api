@@ -100,7 +100,11 @@
         $("form#project_form").trigger("reset");
         $("#summernote").summernote("reset");
         KTUtil.btnRelease(sendBtn);
-        history.pushState(null, null, "view-projects");
+        if(!user_details.mp) {
+          history.pushState(null, null, "dashboard");
+        }else {
+         history.pushState(null, null, "view-projects");
+        }
       },
       error: function (error) {
         console.log("error", error);
