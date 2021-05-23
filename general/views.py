@@ -1,13 +1,14 @@
 from general.serializers import *
 from rest_framework import status
 from rest_framework.response import Response
-from constituent_operations.models import Message
+from constituent_operations.models import Message, IncidentReport, RequestForm
 from constituent_operations.serializers import SendMessageSerializer
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework.generics import ListAPIView
 from users.models import Country, Region, Constituency, Town, Area
 from rest_framework import  status
+from django.db.models import  Q
 
 
 
@@ -164,6 +165,60 @@ class EditProfileView(APIView):
 
 
 
+class UnreadsView(APIView):
+    permission_classes=()
 
-           
+    def get(self, request, id):
+        user = User.objects.get(system_id_for_user=id)
+
+        mp = ""
+
+        for member in user.active_constituency.members.all():
+            if member.is_mp:
+                mp = member
+                print(mp)
+                break
+                
+
+
+        
+
+        if user.is_mp:
+            incidents = IncidentReport.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
+            requests_ = RequestForm.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
+            messages = Message.objects.filter(receiver=mp, sender__active_constituency=mp.active_constituency, read=False)
+            unread_messages=messages.count()
+
+            
+            
+            return Response({
+            "status":status.HTTP_200_OK,
+            "messages":unread_messages,
+            "incident_reports":incidents,
+            "request_forms":requests_
+            }, status=status.HTTP_200_OK)
+        else:
+
+            messages = Message.objects.filter(receiver=user, sender=mp, read=False)
+            unread_messages = messages.count()
+            return Response({
+                "status":status.HTTP_200_OK,
+                "messages":unread_messages,
+            }, status=status.HTTP_200_OK)
+
+
+class SetMessageToReadView(APIView):
+    permission_classes=()
+
+    def post(self,request,id):
+        message = Message.objects.get(id=id)
+
+        message.read = True
+        message.save()
+
+        return Response({
+            "status":status.HTTP_200_OK
+        }
+        )
+  
 

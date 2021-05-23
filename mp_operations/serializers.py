@@ -15,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id','is_mp','is_constituent','is_security_person','is_assembly_man','is_medical_center', 'is_subadmin','full_name','profile_picture', 'email', 'contact', 'date_of_birth', 'system_id_for_user', 'country', 'region', 'constituency']
+        fields = ['id','is_mp','is_constituent','is_security_person','is_assembly_man','is_medical_center', 'is_subadmin','full_name','profile_picture', 'email', 'contact', 'date_of_birth', 'system_id_for_user', 'country', 'region', 'constituency', "subadmin_for"]
 
 class SubAdminPermissionSerializer(serializers.ModelSerializer):
     class Meta:

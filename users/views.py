@@ -251,6 +251,7 @@ class UserLoginView(APIView):
         ac = ConstituencySerializer(user_.active_constituency)
         ar = ListAllAreaSerializer(user_.active_area)
         at = ListAllTownsSerializer(user_.active_town)
+        sub = ConstituencySerializer(user_.subadmin_for)
         # ac.is_valid(raise_exception=True)
 
         print(f"______________________{ac.data}")
@@ -274,7 +275,8 @@ class UserLoginView(APIView):
             'system_id_for_user':user_.system_id_for_user,
             'active_constituency':ac.data,
             'active_town':at.data,
-            'active_area':ar.data
+            'active_area':ar.data,
+            "subadmin_for":sub.data
 
             }
         status_code = status.HTTP_200_OK

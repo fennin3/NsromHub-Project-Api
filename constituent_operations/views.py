@@ -20,7 +20,7 @@ import os
 from .models import RequestForm, ActionPlanToAssemblyMan, IncidentReport, Message, ProblemsForActionPlan, ApprovedActionPlan, ActionPlanParticipants, Assessment, AssessmentParticipant, ConductAssessment, ConductsForAssessment
 from io import BytesIO
 from django.db.models import  Sum
-import requests
+from django.db.models import  Q
 
 
 
@@ -374,7 +374,7 @@ class RetriveMessageView(APIView):
             print(mp)
 
             for m in message:
-                if m.sender == user or m.sender == mp:
+                if m.sender == user and m.receiver == mp or m.sender == mp and m.receiver == user:
                     messages.append(m)
 
 
@@ -858,10 +858,5 @@ class SendAssessmentView(APIView):
             }
 
             return Response(data, status=status.HTTP_200_OK)
-
-
-
-
-
 
 

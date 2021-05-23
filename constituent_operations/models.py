@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from mp_operations.models import Project
 
 
+
 User = get_user_model()
 
 class Message(models.Model):
@@ -16,7 +17,7 @@ class Message(models.Model):
 
 
     def __str__(self):
-        return f"From {self.sender.full_name} To {self.receiver.full_name}"
+        return f"From {self.sender.full_name} To {self.receiver.email}"
 
 
 class IncidentReport(models.Model):

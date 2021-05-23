@@ -20,4 +20,6 @@ urlpatterns = [
     path("all-towns/<id>/", ListTownView.as_view(), name="emma_towns"),
     path("all-areas/<id>/", ListAreaView.as_view(), name="emma_area"),
 
+    path("unread-info/<id>/", UnreadsView.as_view(), name="unreads")
+
 ]
