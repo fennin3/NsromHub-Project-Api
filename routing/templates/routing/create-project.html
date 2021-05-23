@@ -68,8 +68,13 @@
 
     var sendBtn = KTUtil.getById("project_send"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15";
+    var endp = '';
+        if(!user_details.mp) {
+           endp = `https://nsrohub.herokuapp.com/constituent-operations/create-project-for-mp/`;
+        }else {
+           endp = `https://nsrohub.herokuapp.com/mp-operations/create-project/`;
+        }
 
-    var endp = `https://nsrohub.herokuapp.com/mp-operations/create-project/`;
     var formData = new FormData(document.getElementById("project_form"));
     $.ajax({
       url: endp,
@@ -80,11 +85,9 @@
       processData: false,
       dataType: "json",
       beforeSend: function () {
-        console.log("edn", formData);
         KTUtil.btnWait(sendBtn, _buttonSpinner, "Processing", true);
       },
       success: function (data) {
-        console.log("new message", data);
         swal.fire({
           text: data.message,
           icon: "success",

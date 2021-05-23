@@ -209,6 +209,9 @@ aria-hidden="true"
 </div>
 <script type="text/javascript">
  if(user_details.is_mp){ $("#kt_sticky_toolbar_chat_toggler_2").remove();}
+ if (!user_details.is_mp) {
+  $("#mp_entry").hide();
+} 
  var getInitials = (string) => {
   var names = string.split(" "),
   initials = names[0].substring(0, 1).toUpperCase();
@@ -224,8 +227,6 @@ aria-hidden="true"
 $.get(
   "https://nsrohub.herokuapp.com/general/get-actionplan-status/",
   function (data) {
-    console.log("data", data);
-
     if (data.status === 200) {
       if (data.action_plan_status === true) {
         $("#show_plan").show();
@@ -240,7 +241,6 @@ var fetchActions = () => {
   $.get(
     "https://nsrohub.herokuapp.com/constituent-operations/action-titles/",
     function (data) {
-      console.log("actions", data);
       if (data.status === 200) {
         var actions = data.data;
 
@@ -383,7 +383,6 @@ var fetchData = () => {
       if (data.status === 200) {
         $("#mps_name").text("MP: " + data.data[0]?.mp.full_name);
         var feeds = data.data;
-        console.log("feed", feeds);
         var feed_data = $("#mp_feed_data");
         if (feeds.length === 0) {
           feed_data.append(
@@ -400,7 +399,8 @@ var fetchData = () => {
               <div class="d-flex align-items-center">
               <div class="symbol symbol-40 symbol-light-success mr-5">
               <div class="symbol-label" style="background-image: url(${feeds[feed].mp.profile_picture})">
-              </div></div><div class="d-flex flex-column flex-grow-1">
+              </div></div>
+<div class="d-flex flex-column flex-grow-1">
               <a href="#" class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">${
                 feeds[feed].name
               }</a>
@@ -501,12 +501,12 @@ error: function (error) {
 });
 };
 var toggleShow = ($this) => {
-    // console.log('I am clicked');
     $($this).parent().parent().find("div.comment-box").toggle("fast", "linear");
   };
 
   var constChange = ($this) => {
     var const_id = $($this).data("id");
+    var const__name = $($this).data("name");
 
     var endpoint = `https://nsrohub.herokuapp.com/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
 
@@ -522,8 +522,12 @@ var toggleShow = ($this) => {
         });
       },
       success: function (data) {
-        console.log("update_response", data);
         if (data.status === 200) {
+           user_details.active_constituency.name = const__name;
+               var usd =btoa(btoa(btoa('user_data')));
+               var  usi  = JSON.stringify(user_details);
+                 usi = btoa(btoa(btoa(btoa(usi))));
+                 localStorage.setItem(usd,usi);
           swal
           .fire({
             text: data.message,
@@ -535,6 +539,7 @@ var toggleShow = ($this) => {
             },
           })
           .then(() => {
+
             location.reload();
           });
         } else {
@@ -734,9 +739,8 @@ var toggleShow = ($this) => {
     .removeAttr("data-toggle");
   }
   for (var con in constituencies) {
-    console.log("const", constituencies[con]);
     const_list.append(
-      `<li class="navi-item"><a href="javascript:void(0)" data-id="${constituencies[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituencies[con].name}</span></a></li>`
+      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituencies[con].name}" data-id="${constituencies[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituencies[con].name}</span></a></li>`
       );
   }
 
@@ -780,7 +784,6 @@ var toggleShow = ($this) => {
         KTUtil.btnWait(sendBtn, _buttonSpinner, "Processing", true);
       },
       success: function (data) {
-        console.log("new_const", data);
         if (data.status === 200) {
           swal
           .fire({
