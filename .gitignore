@@ -1,1 +1,3 @@
 # nsromapahub_project_api/.env
+db.sqlite3
+*.pyc

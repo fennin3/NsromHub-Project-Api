@@ -28,7 +28,8 @@ urlpatterns = [
     path('users/login/', UserLoginView.as_view(),name="login_"),
     path("general/", include('general.urls')),
     path("pages/", include('routing.urls')),
-    path("superadmin/", include('superadmin_operations.urls'))
+    path("superadmin/", include('superadmin_operations.urls')),
+    path("chatsystem/", include('chatsystem.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
