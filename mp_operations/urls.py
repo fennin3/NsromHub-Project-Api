@@ -60,6 +60,9 @@ urlpatterns = [
 
 
 
-    path("retrieve-messages/<id>/<consti>/", RetrieveMessages.as_view(), name="retrieve_messages")
+    path("retrieve-messages/<id>/<consti>/", RetrieveMessages.as_view(), name="retrieve_messages"),
+
+    path("read-incident-report/<id>/", SetIncidentReportRead.as_view(), name="read_ir"),
+    path("read-requestform/<id>/", SetRequestFormRead.as_view(), name="read_rf"),
     
 ] 

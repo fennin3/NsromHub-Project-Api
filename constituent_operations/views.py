@@ -364,13 +364,6 @@ class RetriveMessageView(APIView):
             # message = Message.objects.all(sender__active_constituency=const, rec)
 
             mp = User.objects.filter(active_constituency=const,is_mp=True).first()
-            print(mp)
-
-            # for i in const.members.all():
-            #     if i.is_mp:
-            #         mp=i
-            #         break
-
 
             messages = Message.objects.filter(Q(sender=user) & Q(receiver=mp) | Q(sender=mp) & Q(receiver=user))
 
@@ -380,6 +373,7 @@ class RetriveMessageView(APIView):
 
             data = {
                 "status":status.HTTP_200_OK,
+                "this":len(data.data),
                 "messages":data.data
             }
 

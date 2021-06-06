@@ -1066,3 +1066,34 @@ class RetrieveMessages(APIView):
             return Response()
 
 
+class SetRequestFormRead(APIView):
+    permission_classes=()
+    def post(self, request, id):
+        rf = RequestForm.objects.get(id=id)
+
+        rf.read = True
+        rf.save()
+
+        return Response({
+            "status":status.HTTP_200_OK,
+            "message":"marked as read"
+        }
+        )
+
+
+
+class SetIncidentReportRead(APIView):
+    permission_classes=()
+    def post(self, request, id):
+        rf = IncidentReport.objects.get(id=id)
+
+        rf.read = True
+        rf.save()
+
+        return Response({
+            "status":status.HTTP_200_OK,
+            "message":"marked as read"
+        }
+        )
+
+
