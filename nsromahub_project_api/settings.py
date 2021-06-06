@@ -30,7 +30,7 @@ DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [""]
+ALLOWED_HOSTS = ["198.199.73.102"]
 
 
 # Application definition
