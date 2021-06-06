@@ -1,7 +1,6 @@
 from users.serializers import ListAllCountriesSerializer
 from django.urls import path
 from . import views
-from . import tempview
 
 urlpatterns = [
     # Login - Register
@@ -20,8 +19,5 @@ urlpatterns = [
 
 
     # temp
-
-    path('home/', tempview.home, name="home"),
-    path('login-temp/', tempview.loginUser, name="login_temp")
 
 ]
