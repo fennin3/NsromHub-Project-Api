@@ -1,0 +1,227 @@
+<div class="container">
+  <div class="card card-custom" >
+
+      <div class="row" id="ass_card">
+          <div class="col-lg-6">
+<div class="card-header">
+      <div class="card-title">Project Assessment</div>
+    </div>
+    <form class="form" id="assessment_form">
+      <div class="card-body" id="assessment_card">
+
+      </div>
+    </form>
+          </div>
+           <div class="col-lg-6">
+               <div class="card-header">
+      <div class="card-title">Conduct Assessment</div>
+    </div>
+                <form class="form" id="conduct_form">
+      <div class="card-body" id="conduct_card">
+
+      </div>
+    </form>
+
+          </div>
+          <div class="col-lg-12">
+              <div class="form-group d-flex flex-wrap flex-center">
+          <button type="button" id="add_assessment" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4">Submit</button>
+        </div>
+          </div>
+      </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  var current_date = new Date();
+ var year = current_date.getFullYear();
+  $.ajax({
+    url: `https://nsrohub.herokuapp.com/constituent-operations/retrive-projects-for-assessment/${user_details.system_id_for_user}/${year}/`,
+    dataType: 'json',
+    beforeSend: function() {
+
+      KTApp.block('#ass_card', {
+        overlayColor: 'blue',
+        opacity: 0.1,
+        state: 'primary' 
+      });
+
+    },
+    success: function (data) {
+      if (data.status === 200) {
+        var ass_data = data.projects, cond_data = data.conducts;
+        if (ass_data.length > 0 && cond_data.length > 0) {
+
+
+          var ass_card = $("#assessment_card"), cond_card = $("#conduct_card");
+          ass_card.html('');
+          cond_card.html('');
+          for (let d in ass_data) {
+            ass_card.append(`
+                  <div class="form-group row">
+            <label class="col-lg-3 col-form-label" for="___${ass_data[d].id}">${ass_data[d].name}: *</label>
+            <div class="col-lg-6">
+             <select
+             class="form-control form-control-solid selectpicker"
+             id="___${ass_data[d].id}"
+             name="${ass_data[d].id}"
+             required
+             >
+             <option disabled selected hidden >Select remarks</option>
+             <option>Excellent</option>
+             <option>Very Good</option>
+             <option>Good</option>
+             <option>Average</option>
+             <option>Poor</option>
+           </select>
+           <span class="form-text text-muted">Please select your remarks for this project</span>
+         </div>
+       </div>
+              `)
+          }
+          for (let c in cond_data) {
+              cond_card.append(`
+               <div class="form-group row">
+            <label class="col-lg-3 col-form-label" for="___${cond_data[c].id}">${cond_data[c].title}: *</label>
+            <div class="col-lg-6">
+             <select
+             class="form-control form-control-solid selectpicker"
+             id="___${cond_data[c].id}"
+             name="${cond_data[c].title}"
+             required
+             >
+             <option disabled selected hidden >Select remarks</option>
+             <option>Excellent</option>
+             <option>Very Good</option>
+             <option>Good</option>
+             <option>Average</option>
+             <option>Poor</option>
+           </select>
+           <span class="form-text text-muted">Please select your remarks for this conduct</span>
+         </div>
+       </div>
+              `);
+                $(".selectpicker").selectpicker();
+            }
+
+        }else {
+ass_card.html(`  <div class="d-flex justify-content-between flex-column h-100">
+                <p>No Projects to has been posted yet </p>
+              </div>`);
+cond_card.html(`  <div class="d-flex justify-content-between flex-column h-100">
+                <p>No conduct to assess. </p>
+              </div>`)
+        }
+        KTApp.unblock("#ass_card");
+
+      }else {
+        swal.fire({
+          text: data.message,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn font-weight-bold btn-light-primary"
+          }
+        }).then(()=> KTApp.unblock("#ass_card"));
+      }
+    },
+    error: function (error) {
+      console.log('assessment error', error);
+      swal.fire({
+        text: 'An error occurred and that is all we know',
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Ok, got it!",
+        customClass: {
+          confirmButton: "btn font-weight-bold btn-light-primary"
+        }
+      }).then(()=> KTApp.unblock("#ass_card"));
+    }
+  });
+
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
+  $('#add_assessment').on('click', function (e) {
+    e.preventDefault();
+    var ass_form = $('form#assessment_form');
+      var cond_form = $("form#conduct_form");
+      var a_data = getFormData(ass_form);
+      var c_data = getFormData(cond_form);
+      var send_d = {
+          "projects_assessment" : a_data,
+          "conduct_assessment": c_data
+      }
+       var endpoint = `https://nsrohub.herokuapp.com/constituent-operations/send-assessment/${user_details.system_id_for_user}/`;
+
+       var assBtn = KTUtil.getById('add_assessment'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
+       $.ajax({
+        url: endpoint,
+        type: "POST",
+        data: JSON.stringify(send_d),
+        contentType:"application/json",
+        dataType: "json",
+        cache: false,
+        processData: false,
+        beforeSend: function() {
+          KTUtil.btnWait(assBtn,_buttonSpinner,'Processing',true);
+        },
+        success: function(data) {
+         
+          if (data.status ===200) {
+            swal.fire({
+              text: data.message,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+              }
+            }).then(()=> {
+              KTUtil.btnRelease(assBtn);ass_form.trigger('reset');
+             
+            });
+
+          }else {
+            swal.fire({
+              text: data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn font-weight-bold btn-light-primary"
+              }
+            }).then(()=> KTUtil.btnRelease(assBtn));
+          }
+
+        },
+        error: function(error) {
+          console.log('an error occurred',error);
+          swal.fire({
+            text: `An error occurred and that is all we know`,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-danger"
+            }
+          }).then(()=> KTUtil.btnRelease(assBtn));
+        }
+      });
+
+    
+ 
+  });
+
+
+</script>

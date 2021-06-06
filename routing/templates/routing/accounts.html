@@ -1,0 +1,490 @@
+<div class="container">
+  <div class="card card-custom">
+    <div class="card-header">
+      <div class="card-title">Create Account for users</div>
+    </div>
+
+     <form class="form" id="add_account_form">
+          <div class="card-body">
+            <div class="mb-15">
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="type">Account Type: *</label>
+                <div class="col-lg-6">
+                 <select
+          class="form-control form-control-solid selectpicker"
+          id="type"
+          name="type"
+          >
+          <option disabled selected hidden >Select account type</option>
+          <option value="security">Security</option>
+          <option value="subadmin">Sub Admin</option>
+          <option value="medical_center">Medical Center</option>
+          <option value="assemblyman">Assemblyman</option>
+        </select>
+         <span class="form-text text-muted">Please select account type</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="full_name">Full Name: *</label>
+                <div class="col-lg-6">
+                  <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Enter full name"/>
+                  <span class="form-text text-muted">Please enter your full name</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="email">Email address: *</label>
+                <div class="col-lg-6">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Enter email"/>
+                  <span class="form-text text-muted">We'll never share your email with anyone else</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="phone">Phone number: *</label>
+                <div class="col-lg-6">
+                  <input type="text" class="form-control" name="contact" id="phone" placeholder="Enter phone number"/>
+                  <span class="form-text text-muted">Must begin with country code</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="dob">Date of birth: *</label>
+                <div class="col-lg-6">
+                  <div class="input-group date">
+                    <input
+                    type="text"
+                    class="form-control"
+                    id="dob"
+                    name="date_of_birth"
+                    readonly="readonly"
+                    placeholder="Select dob"
+                    />
+                    <div class="input-group-append">
+                      <span class="input-group-text">
+                        <i class="la la-calendar-check-o"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <span class="form-text text-muted"
+                  >Click to select date of birth</span
+                  >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="voters_id">Voters ID: </label>
+                <div class="col-lg-6">
+                  <input type="text" class="form-control" name="voters_id" id="voters_id" placeholder="Enter Voters ID Number"/>
+                  <span class="form-text text-muted">Please enter your Voters ID Number</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="countries">Country: *</label>
+                <div class="col-lg-6">
+                  <select class="form-control form-control-solid" name="country" id="countries">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="regions">Region: *</label>
+                <div class="col-lg-6">
+                  <select class="form-control form-control-solid" name="region" id="regions" disabled>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="constituencies">Constituency: *</label>
+                <div class="col-lg-6">
+                  <select class="form-control form-control-solid" name="constituency" id="constituencies" disabled>
+                  </select>
+                </div>
+              </div>
+                <div class="form-group row">
+                  <label class="col-lg-3 col-form-label" for="towns">Town: *</label>
+                  <div class="col-lg-6">
+                    <select class="form-control form-control-solid" name="town" id="towns" disabled>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-lg-3 col-form-label" for="areas">Area: *</label>
+                  <div class="col-lg-6">
+                    <select class="form-control form-control-solid" name="area" id="areas" disabled>
+                    </select>
+                  </div>
+                </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="password">Password: *</label>
+                <div class="col-lg-6">
+                  <input class="form-control form-control-solid"  placeholder="********" name="password" type="password" id="password" />
+                  <span class="form-text text-muted">Enter password at least 8 characters</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="cpassword">Confirm Password: *</label>
+                <div class="col-lg-6">
+                  <input class="form-control form-control-solid" placeholder="********" name="cpassword" type="password" id="cpassword" />
+                  <span class="form-text text-muted">Confirm Password</span>
+                </div>
+              </div>
+              <div class="form-group d-flex flex-wrap flex-center">
+                  <button type="button" id="add_account" class="btn btn-primary font-weight-bold px-9 py-4 my-3 mx-4">Submit</button>
+                </div>
+            </div>
+          </div>
+        </form>
+</div>
+</div>
+
+<script type="text/javascript">
+
+
+  $(".selectpicker").selectpicker();
+  var arrows = {
+        leftArrow: '<i class="la la-angle-left"></i>',
+        rightArrow: '<i class="la la-angle-right"></i>',
+      };
+
+      $("#dob").datepicker({
+        rtl: false,
+        startDate: '1900-01-01',
+        endDate: '2003-01-01',
+        orientation: "top right",
+        templates: arrows,
+        format: 'yyyy-mm-dd'
+      });
+
+
+
+ var countries = $("#countries"), regions = $("#regions"), constituencies = $("#constituencies"), towns = $("#towns"), area = $("#areas");
+      countries.select2({
+        placeholder:'Fetching Countries',
+      });
+      regions.select2({
+        placeholder:'Select Region',
+      });
+      constituencies.select2({
+        placeholder:'Select Constituency',
+      });
+      towns.select2({
+        placeholder:'Select Town',
+      });
+      area.select2({
+        placeholder:'Select Area',
+      });
+$.ajax({
+        url: 'https://nsrohub.herokuapp.com/users/all-countries/',
+        dataType: 'json',
+        success: function (data) {
+
+          console.log('data',data[0].name);
+          let arr = [];
+          data.forEach(({id,name},key)=>{
+            arr.push({id, text:name});
+          });
+
+          sessionStorage.setItem('countries',JSON.stringify(data));
+          countries.html('').select2({data:[{id:'',text:''},...arr],placeholder:'Select Country'});
+        }
+      });
+
+countries.on('change',function (e) {
+        regions.attr('disabled','disabled');
+        constituencies.attr('disabled','disabled');
+        towns.attr('disabled','disabled');
+        area.attr('disabled','disabled');
+        let id = $(this).val();
+        let countries = sessionStorage.getItem('countries');
+        countries = JSON.parse(countries);
+
+        let region = countries.filter((value,key)=> value.id == id);
+
+        let reg = [];
+        region[0].regions.forEach(({id,name},key)=>{
+          reg.push({id, text:name});
+        });
+        regions.html('').select2({data:[{id:'',text:''},...reg],placeholder:'Select Region'});
+        regions.removeAttr('disabled');
+
+      });
+regions.on('change',function (e){
+        constituencies.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Constituency'});
+        towns.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Town'});
+        area.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Area'});
+        let reg_id = $(this).val();
+        let count_id = $('#countries').val();
+        let country = sessionStorage.getItem('countries');
+        country = JSON.parse(country);
+
+        let region = country.filter((value,key)=> value.id == count_id);
+
+        let constituency = region[0].regions.filter((value,key)=>value.id == reg_id);
+        let cons = [];
+
+        constituency[0].constituencies.forEach(({id,name},key)=>{
+          cons.push({id, text:name});
+        });
+
+        constituencies.html('').select2({data:[{id:'',text:''},...cons],placeholder:'Select Constituency'})
+        constituencies.removeAttr('disabled');
+      });
+
+  constituencies.on('change',function (e){
+        towns.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Town'});
+        area.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Area'});
+
+        let const_id = $(this).val();
+        let reg_id = $("#regions").val();
+        let count_id = $('#countries').val();
+        let country = sessionStorage.getItem('countries');
+        country = JSON.parse(country);
+
+        let region = country.filter((value,key)=> value.id == count_id);
+
+        let constituency = region[0].regions.filter((value,key)=>value.id == reg_id);
+        let tns = [];
+
+        let town = constituency[0].constituencies.filter((value,key)=>value.id == const_id);
+        console.log('towns', town);
+
+        town[0].towns.forEach(({id,name},key)=>{
+          tns.push({id, text:name});
+        });
+
+        towns.html('').select2({data:[{id:'',text:''},...tns],placeholder:'Select Town'})
+        towns.removeAttr('disabled');
+      });
+
+  towns.on('change',function (e){
+        area.attr('disabled','disabled').html('').select2({data:[],placeholder:'Select Area'});
+        let town_id = $(this).val();
+        let const_id = $("#constituencies").val();
+        let reg_id = $("#regions").val();
+        let count_id = $('#countries').val();
+        let country = sessionStorage.getItem('countries');
+        country = JSON.parse(country);
+
+        let region = country.filter((value,key)=> value.id == count_id);
+
+        let constituency = region[0].regions.filter((value,key)=>value.id == reg_id);
+        let ars = [];
+
+        let town = constituency[0].constituencies.filter((value,key)=>value.id == const_id);
+
+        let areas = town[0].towns.filter((value,key)=>value.id == town_id);
+        console.log('areas', areas);
+
+        areas[0].areas.forEach(({id,name},key)=>{
+          ars.push({id, text:name});
+        });
+
+        area.html('').select2({data:[{id:'',text:''},...ars],placeholder:'Select Area'})
+        area.removeAttr('disabled');
+      });
+
+    var validation;
+        var form = KTUtil.getById('add_account_form');
+
+        validation = FormValidation.formValidation(
+         form,
+         {
+            fields: {
+               full_name: {
+                  validators: {
+                     notEmpty: {
+                        message: 'Full Name is required'
+                    }
+                }
+            },
+                  type: {
+                  validators: {
+                     notEmpty: {
+                        message: 'Select an account type'
+                    }
+                }
+            },
+            contact: {
+                validators: {
+                    notEmpty: {
+                        message: 'Phone number is required'
+                    },
+                    digits: {
+                        message: 'The value is not a valid phone number'
+                    },
+                    stringLength: {
+                        min:10,
+                        max:15,
+                        message: 'Please enter a phone number with range of 10 and 15'
+                    }
+                }
+            },
+            email: {
+                validators: {
+                 notEmpty: {
+                    message: 'Email address is required'
+                },
+                emailAddress: {
+                    message: 'The value is not a valid email address'
+                }
+            }
+        },
+        date_of_birth: {
+            validators: {
+                notEmpty: {
+                    message: 'Date of birth is required'
+                }
+            }
+        },
+        voters_id: {
+            validators: {
+                notEmpty: {
+                    message: 'Voters ID is required'
+                }
+            }
+        },
+        country: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select a country'
+                }
+            }
+        },
+        region: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select a region'
+                }
+            }
+        },
+        constituency: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select a constituency'
+                }
+            }
+        },
+         town: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select a town'
+                }
+            }
+        },
+         area: {
+            validators: {
+                notEmpty: {
+                    message: 'Please select an area'
+                }
+            }
+        },
+        password: {
+            validators: {
+                notEmpty: {
+                    message: 'The password is required'
+                }
+            }
+        },
+
+        cpassword: {
+            validators: {
+                notEmpty: {
+                    message: 'The password confirmation is required'
+                },
+                identical: {
+                    compare: function() {
+                        return form.querySelector('[name="password"]').value;
+                    },
+                    message: 'The password and its confirmation are not the same'
+                }
+            }
+        }
+    },
+    plugins: {
+       trigger: new FormValidation.plugins.Trigger(),
+       bootstrap: new FormValidation.plugins.Bootstrap()
+   }
+}
+);
+
+        $('#add_account').on('click', function (e) {
+            e.preventDefault();
+
+            validation.validate().then(function(status) {
+
+              if (status == 'Valid') {
+                   var ac_type = $("#type").val().toLowerCase();
+                  var endpoint = `https://nsrohub.herokuapp.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/${ac_type}/`;
+                 
+                var $this = $('#add_account_form'),  signUpBtn = KTUtil.getById('add_account'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
+                $.ajax({
+                    url: endpoint,
+                    type: "POST",
+                    data: $this.serialize(),
+                    dataType: "json",
+                    cache: false,
+                    processData: false,
+                    beforeSend: function() {
+                        KTUtil.btnWait(signUpBtn,_buttonSpinner,'Processing',true);
+                       
+
+                    },
+                    success: function(data) {
+                        console.log('data',data);
+                        if (data.status ===201) {
+                            swal.fire({
+                                text: data.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                            }).then(()=> {
+                                KTUtil.btnRelease(signUpBtn);$this.trigger('reset');
+                                if (ac_type === 'subadmin') {
+                                    history.pushState(null,null,'view-admins');
+                                }
+                              
+                            });
+
+                        }else {
+                            swal.fire({
+                                text: data.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn font-weight-bold btn-light-primary"
+                                }
+                            }).then(()=> KTUtil.btnRelease(signUpBtn));
+                        }
+
+                    },
+                    error: function(error) {
+                        console.log('an error occurred',error);
+                        swal.fire({
+                            text: `Error ${error.responseJSON.message}`,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn font-weight-bold btn-light-danger"
+                            }
+                        }).then(()=> KTUtil.btnRelease(signUpBtn));
+                    }
+                });
+
+            } else {
+               swal.fire({
+                  text: "Sorry, looks like there are some errors detected, please try again.",
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok, got it!",
+                  customClass: {
+                      confirmButton: "btn font-weight-bold btn-light-primary"
+                  }
+              }).then(function() {
+                  KTUtil.scrollTop();
+              });
+          }
+      });
+        });
+    
+</script>

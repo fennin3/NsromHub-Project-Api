@@ -1,0 +1,273 @@
+<div class="container">
+  <div class="card card-custom bg-gray-100 card-stretch gutter-b">
+    <!--begin::Header-->
+    <div class="card-header border-0 bg-primary py-5">
+      <h3 class="card-title font-weight-bolder text-white">Action Chart</h3>
+      <div class="card-toolbar">
+        <div class="dropdown dropdown-inline">
+          <a
+            href="#"
+            class="btn btn-transparent-white btn-sm font-weight-bolder dropdown-toggle px-5"
+            id="current_year"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          ></a>
+          <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <!--begin::Navigation-->
+            <ul class="navi navi-hover" id="year_holder"></ul>
+            <!--end::Navigation-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body p-0 position-relative overflow-hidden">
+      <!--begin::Chart-->
+      <div id="assembly_chart" class="d-flex justify-content-center"></div>
+      <!--end::Chart-->
+
+      <div
+        class="mb-5 mr-3 mt-10 d-flex justify-content-end"
+        style="display: none"
+        id="approve_body"
+      >
+        <button
+          type="button"
+          class="btn btn-primary approve_status"
+          data-stats=""
+          data-year=""
+          data-labels=""
+         data-toggle="modal"
+          data-target="#approve_plan_modal"
+
+        ></button>
+      </div>
+      <!--end::Body-->
+    </div>
+  </div>
+</div>
+  <div class="modal fade" id="approve_plan_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i aria-hidden="true" class="ki ki-close"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form" id="approveP">
+                            <div class="form-group">
+                                <label class="form-label" for="appC">Comment </label>
+                              <textarea class="form-control" placeholder="enter your comment" id="appC" name="appC" rows="4"></textarea>
+                            </div>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary font-weight-bold approve_status" id="approve_status"  onclick="approvePlan(this)" >Approve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<script>
+  var showChart = (date) => {
+    var primary = "#6993FF";
+    var success = "#1BC5BD";
+    var info = "#8950FC";
+    var warning = "#FFA800";
+    var danger = "#F64E60";
+    var apexChart = "#assembly_chart";
+
+    $.get(
+      `https://nsrohub.herokuapp.com/constituent-operations/retrieve-action-plan-summary/${user_details.system_id_for_user}/${date}/`,
+      function (data) {
+        if (data.status === 200) {
+          $("#assembly_chart").html("");
+
+          var options = {
+            series: data.stats,
+            chart: {
+              width: 500,
+              type: "pie",
+            },
+            labels: data.problem_titles,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 500,
+                  },
+                  noData: {
+                    text: "No Data...",
+                  },
+                  legend: {
+                    position: "bottom",
+                  },
+                },
+              },
+            ],
+            colors: [primary, success, warning, danger, info],
+          };
+
+          var chart = new ApexCharts(
+            document.querySelector(apexChart),
+            options
+          );
+
+          chart.render();
+
+          $.get(
+            `https://nsrohub.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${date}/`,
+            function (data) {
+
+              if (data.status === true) {
+                $(".approve_status")
+                  .text("Approved")
+                  .removeClass("btn-primary")
+                  .addClass("btn-success")
+                  .attr("disabled", "disabled")
+                  .removeAttr("data-stats")
+                  .removeAttr("data-year")
+                  .removeAttr("data-labels")
+                  .removeAttr("onclick")
+                  .css("cursor", "not-allowed");
+              } else {
+                $(".approve_status")
+                  .text("Approve")
+                  .removeClass("btn-success")
+                  .addClass("btn-primary")
+                  .removeAttr("disabled", "disabled")
+                  .attr("data-stats", data.stats)
+                  .attr("data-labels", data.problem_titles)
+                  .attr("data-year", date)
+                  
+                  .css("cursor", "pointer");
+              }
+              $("#approve_body").show();
+            }
+          );
+        }
+      }
+    );
+  };
+
+  var approvePlan = ($this) => {
+    var stats = $($this).data("stats");
+    var problem_titles = $($this).data("labels");
+    var year = $($this).data("year");
+    var comment = $("#appC").val();
+    var sendBtn = KTUtil.getById("approve_status"),
+      _buttonSpinner = "spinner spinner-right spinner-white pr-15",
+      endpoint = `https://nsrohub.herokuapp.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${year}/`;
+
+    $.ajax({
+      url: endpoint,
+      method: "POST",
+      data: JSON.stringify({ problem_titles, stats,comment }),
+      cache: false,
+      processData: false,
+      dataType: "json",
+      beforeSend: function () {
+        console.log("edn", endpoint);
+        KTUtil.btnWait(sendBtn, _buttonSpinner, "Processing", true);
+      },
+      success: function (data) {
+
+        if (data.status === 200) {
+            $("#appC").val('');
+            $("#approve_plan_modal").modal('hide');
+            $('.modal-backdrop').remove();
+          swal
+            .fire({
+              text: data.message,
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn font-weight-bold btn-light-danger",
+              },
+            })
+            .then(() => {
+              $(".approve_status")
+                .text("Approved")
+                .removeClass("btn-primary")
+                .addClass("btn-success")
+                .attr("disabled", "disabled")
+                .removeAttr("data-stats")
+                .removeAttr("data-labels")
+                .removeAttr("onclick")
+                .css("cursor", "not-allowed");
+            });
+        } else {
+          swal.fire({
+            text: data.message,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn font-weight-bold btn-light-danger",
+            },
+          });
+        }
+
+        KTUtil.btnRelease(sendBtn);
+      },
+      error: function (error) {
+        console.log("error", error);
+        swal.fire({
+          text: `An error occurred and that is all we know`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn font-weight-bold btn-light-danger",
+          },
+        });
+        KTUtil.btnRelease(sendBtn);
+      },
+    });
+  };
+
+  var current_date = new Date();
+
+  $("#current_year").text(current_date.getFullYear());
+
+  showChart(current_date.getFullYear());
+
+  $.get(
+    "https://nsrohub.herokuapp.com/constituent-operations/retrieve-years/",
+    function (data) {
+      console.log("datayears", data);
+      if (data.status === 200) {
+        var years = data.years,
+          year_holder = $("#year_holder");
+
+        if (years.length > 0) {
+          year_holder.html("");
+
+          for (let year in years) {
+            year_holder.append(`
+
+            <li class="navi-item">
+            <a href="#" class="navi-link" onclick="changeYear(this)" data-year="${years[year]}">
+
+            <span class="navi-text">${years[year]}</span>
+            </a>
+            </li>`);
+          }
+        }
+      }
+    }
+  );
+
+  var changeYear = ($this) => {
+    var new_date = $($this).data("year");
+
+    showChart(new_date);
+  };
+</script>
