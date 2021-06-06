@@ -1,5 +1,5 @@
 import json
-
+from django.db.models import Q
 from django.core.files.base import ContentFile
 from mp_operations.serializers import UserSerializer
 from users.models import Constituency, Constituent
@@ -361,23 +361,11 @@ class RetriveMessageView(APIView):
 
             const = user.active_constituency
 
-            message = Message.objects.all().order_by("date_sent")
+            # message = Message.objects.all(sender__active_constituency=const, rec)
 
-            mp = ""
+            mp = User.objects.filter(active_constituency=const,is_mp=True).first()
 
-            for i in const.members.all():
-                if i.is_mp:
-                    mp=i
-                    break
-            messages = []
-
-            print(mp)
-
-            for m in message:
-                if m.sender == user and m.receiver == mp or m.sender == mp and m.receiver == user:
-                    messages.append(m)
-
-
+            messages = Message.objects.filter(Q(sender=user) & Q(receiver=mp) | Q(sender=mp) & Q(receiver=user))
 
             
             data = RetrieveMessageSerializer(messages, many=True)
@@ -385,6 +373,7 @@ class RetriveMessageView(APIView):
 
             data = {
                 "status":status.HTTP_200_OK,
+                "this":len(data.data),
                 "messages":data.data
             }
 
