@@ -170,14 +170,8 @@ class UnreadsView(APIView):
 
     def get(self, request, id):
         user = User.objects.get(system_id_for_user=id)
-
-        mp = ""
-
-        for member in user.active_constituency.members.all():
-            if member.is_mp:
-                mp = member
-                print(mp)
-                break
+        const = user.active_constituency
+        mp = User.objects.filter(active_constituency=const,is_mp=True).first()
                 
 
 
@@ -186,7 +180,7 @@ class UnreadsView(APIView):
         if user.is_mp:
             incidents = IncidentReport.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
             requests_ = RequestForm.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
-            messages = Message.objects.filter(receiver=mp, sender__active_constituency=mp.active_constituency, read=False)
+            messages = Message.objects.filter(receiver=user, sender__active_constituency=mp.active_constituency, read=False)
             unread_messages=messages.count()
 
             
@@ -222,3 +216,33 @@ class SetMessageToReadView(APIView):
         )
   
 
+
+class ReadMessagesView(APIView):
+    permission_classes = ()
+    def post(self, request, receiver, sender):
+        try:
+            receiver = User.objects.get(system_id_for_user=receiver)
+            sender = User.objects.get(system_id_for_user=sender)
+
+            # const = mp.active_constituency
+
+            messages = Message.objects.filter(sender=sender, receiver=receiver).filter(read=False)
+            print("---------------------------")
+            print(messages)
+            for message in messages:
+                message.read = True
+
+                message.save()
+
+            
+           
+            data = {
+                "status":status.HTTP_200_OK,
+                "message":"messages has been marked as read."
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+
+            return Response()

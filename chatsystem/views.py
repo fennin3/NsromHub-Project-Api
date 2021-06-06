@@ -41,3 +41,11 @@ class SendMessageViaMicroServiceView(APIView):
         }, 
         status=status.HTTP_200_OK
         )
+
+
+
+class RetrieveMessageView(APIView):
+    permission_classes =()
+
+    def post(self, request):
+        pass
