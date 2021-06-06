@@ -56,10 +56,10 @@ urlpatterns = [
 
     path("create-post/", CreatePostView.as_view(), name="create_post"),
 
-    path("action-plan-overall-summary/<id>/<year>/", RetrieveActionPlanOverview.as_view(),name="overview")
+    path("action-plan-overall-summary/<id>/<year>/", RetrieveActionPlanOverview.as_view(),name="overview"),
 
 
 
-
+    path("retrieve-messages/<id>/<consti>/", RetrieveMessages.as_view(), name="retrieve_messages")
     
 ] 

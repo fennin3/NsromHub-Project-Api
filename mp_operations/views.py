@@ -20,7 +20,8 @@ from django.core.files.base import ContentFile
 import requests
 from users.utils import generate_OTP, generate_userID, send_sms, sending_mail
 from constituent_operations.models import Assessment, ConductAssessment, ConductsForAssessment, ActionPlanToAssemblyMan
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
+from constituent_operations.serializers import  RetrieveMessageSerializer
 
 
 
@@ -1037,6 +1038,31 @@ class RetrieveActionPlanOverview(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class RetrieveMessages(APIView):
+    permission_classes = ()
+    def get(self, request, id, consti):
+        try:
+            mp = User.objects.get(system_id_for_user=id)
+            consti = User.objects.get(system_id_for_user=consti)
 
+            # const = mp.active_constituency
+
+            messages = Message.objects.filter(Q(sender=mp) & Q(receiver=consti) | Q(sender=consti) & Q(receiver=mp))
+
+            
+            data = RetrieveMessageSerializer(messages, many=True)
+            # data.is_valid(raise_exception=True)
+
+            data = {
+                "status":status.HTTP_200_OK,
+                "this":len(data.data),
+                "messages":data.data
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+
+            return Response()
 
 
