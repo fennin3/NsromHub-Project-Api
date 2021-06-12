@@ -1,0 +1,192 @@
+<div class="container">
+  <div class="card card-custom">
+    <div class="card-header">
+      <div class="card-title">Send Email</div>
+    </div>
+
+    <form id="compose_form" enctype="multipart/form-data">
+      <div class="card-body">
+        <div class="form-group">
+          <label for="category">Category *:</label>
+          <select
+            class="form-control form-control-solid selectpicker"
+            id="category"
+            name="category"
+            required
+          >
+            <option value="all">All Constituents</option>
+            <option value="custom">Custom</option>
+          </select>
+          <span class="form-text text-muted">Please select category</span>
+        </div>
+        <div class="form-group const_s" style="display: none">
+          <label for="constituents">Constituents *:</label>
+          <select
+            class="form-control form-control-solid select2"
+            style="width: 100% !important"
+            id="constituents"
+            name="receiver_id"
+          ></select>
+          <span class="form-text text-muted"
+            >Please select constituents (s)</span
+          >
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject *:</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            class="form-control"
+            placeholder="Enter Message Subject"
+          />
+          <span class="form-text text-muted">Please enter subject</span>
+        </div>
+        <div class="form-group">
+          <label for="summernote">Message *:</label>
+          <textarea
+            rows="3"
+            id="summernote"
+            name="message"
+            class="form-control"
+            placeholder="Enter Message Message"
+          ></textarea>
+          <span class="form-text text-muted">Please enter message</span>
+        </div>
+        <div class="form-group">
+          <label for="file">Attachment:</label>
+          <input
+            type="file"
+            id="file"
+            name="attached_file"
+            accept=".png,.jpg,.jpeg,.pdf,.docx,.doc"
+            class="form-control"
+          />
+          <span class="form-text text-muted">This field is optional</span>
+        </div>
+
+        <input type="hidden" name="user_id" id="sender" value="{{ id }}" />
+        <input type="hidden" name="sender_id" id="sender" value="{{ id }}" />
+        <div class="form-group">
+          <button
+            type="submit"
+            class="btn btn-primary font-weight-bold px-6 mr-4"
+            id="compose_send"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $("#summernote").summernote({
+    height: 250,
+  });
+  $("#constituents").select2({
+    placeholder: "Select constituents (s)",
+    language: {
+      noResults: function () {
+        return $("No registered constituent");
+      },
+    },
+  });
+
+  $(".selectpicker").selectpicker();
+  $("#category").on("change", function (e) {
+    if (this.value !== "" && this.value !== "all") {
+      if (this.value === "custom") {
+        $(".const_s").fadeIn();
+      }
+    } else {
+      $(".const_s").fadeOut();
+    }
+  });
+
+  $.ajax({
+    url: `https://api.rennintech.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
+    method: "POST",
+    data: [],
+    cache: false,
+    processData: false,
+    dataType: "json",
+
+    success: function (data) {
+      if (data.data.length > 0) {
+        let cons = [];
+        data.data.forEach(({ system_id_for_user, full_name }, key) => {
+          cons.push({ id: system_id_for_user, text: full_name });
+        });
+
+        $("#constituents")
+          .html("")
+          .select2({
+            data: [{ id: "", text: "" }, ...cons],
+            placeholder: "Select Constituent",
+          });
+      } else {
+        $("#constituents")
+          .html("")
+          .select2({ data: [], placeholder: "No constituents available" });
+      }
+    },
+    error: function (error) {
+      console.log("CONST ERROR", error);
+    },
+  });
+
+  $("form#compose_form").on("submit", function (e) {
+    e.preventDefault();
+
+    var sendBtn = KTUtil.getById("compose_send"),
+      _buttonSpinner = "spinner spinner-right spinner-white pr-15";
+
+    var endp = `https://api.rennintech.com/mp-operations/mp-send-emails/`;
+    if ($("#category") === "custom") {
+      endp = `https://api.rennintech.com/mp-operations/mp-send-email/`;
+    }
+    var formData = new FormData(document.getElementById("compose_form"));
+    $.ajax({
+      url: endp,
+      method: "POST",
+      data: formData,
+      contentType: false,
+      cache: false,
+      processData: false,
+      dataType: "json",
+      beforeSend: function () {
+        KTUtil.btnWait(sendBtn, _buttonSpinner, "Processing", true);
+      },
+      success: function (data) {
+        console.log("new message", data);
+        swal.fire({
+          text: data.message,
+          icon: "success",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn font-weight-bold btn-light-danger",
+          },
+        });
+        $("form#compose_form").trigger("reset");
+        $("#summernote").summernote("reset");
+        KTUtil.btnRelease(sendBtn);
+      },
+      error: function (error) {
+        console.log("error", error);
+        swal.fire({
+          text: `Error: ${error.responseJSON.message}`,
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn font-weight-bold btn-light-danger",
+          },
+        });
+        KTUtil.btnRelease(sendBtn);
+      },
+    });
+  });
+</script>

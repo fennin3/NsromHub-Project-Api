@@ -1,0 +1,287 @@
+<ul class="menu-nav">
+  <li class="menu-item" aria-haspopup="true">
+    <a href="dashboard" class="menu-link">
+      <i class="menu-icon flaticon2-architecture-and-city"></i>
+      <span class="menu-text">Dashboard </span>
+    </a>
+  </li>
+  {% if is_mp %}
+
+ <li class="menu-item" aria-haspopup="true">
+    <a href="constituents" class="menu-link">
+      <i class="menu-icon flaticon2-architecture-and-city"></i>
+      <span class="menu-text">Constituents</span>
+    </a>
+  </li>
+   <li class="menu-item" aria-haspopup="true">
+    <a href="accounts" class="menu-link">
+      <i class="menu-icon flaticon2-architecture-and-city"></i>
+      <span class="menu-text">Accounts</span>
+    </a>
+  </li>
+  <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+  >
+    <a href="javascript:;" class="menu-link menu-toggle">
+      <i class="menu-icon flaticon2-telegram-logo"></i>
+      <span class="menu-text">Projects</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <li class="menu-item menu-item-parent" aria-haspopup="true">
+          <span class="menu-link">
+            <span class="menu-text">Projects</span>
+          </span>
+        </li>
+
+        <li class="menu-item" aria-haspopup="true">
+          <a href="create-project" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Create Project</span>
+          </a>
+        </li>
+        <li class="menu-item" aria-haspopup="true">
+          <a href="view-projects" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">View Projects</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+ 
+
+  <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+  >
+    <a href="javascript:;" class="menu-link menu-toggle">
+      <i class="menu-icon flaticon2-telegram-logo"></i>
+      <span class="menu-text">Sub Admins</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <li class="menu-item menu-item-parent" aria-haspopup="true">
+          <span class="menu-link">
+            <span class="menu-text">Sub Admins</span>
+          </span>
+        </li>
+
+        <li class="menu-item" aria-haspopup="true">
+          <a href="add-admin" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Add Sub Admin</span>
+          </a>
+        </li>
+        <li class="menu-item" aria-haspopup="true">
+          <a href="view-admins" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">View Sub Admins</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+  >
+    <a href="javascript:;" class="menu-link menu-toggle">
+      <i class="menu-icon flaticon2-telegram-logo"></i>
+      <span class="menu-text">Summary</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <li class="menu-item menu-item-parent" aria-haspopup="true">
+          <span class="menu-link">
+            <span class="menu-text">Summary</span>
+          </span>
+        </li>
+
+        <li class="menu-item" aria-haspopup="true">
+          <a href="summary-assessment" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Assessment</span>
+          </a>
+        </li>
+        <li class="menu-item" aria-haspopup="true">
+          <a href="summary-action-plan" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Action Plan</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+  {% endif %}
+
+{% if user.subadmin_for == user.active_constituency.id %}
+     <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+  >
+    <a href="javascript:;" class="menu-link menu-toggle">
+      <i class="menu-icon flaticon2-telegram-logo"></i>
+      <span class="menu-text">Projects</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <li class="menu-item menu-item-parent" aria-haspopup="true">
+          <span class="menu-link">
+            <span class="menu-text">Projects</span>
+          </span>
+        </li>
+
+        <li class="menu-item" aria-haspopup="true">
+          <a href="create-project" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Create Project</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </li>
+
+
+{% endif %}
+
+  <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+  >
+    <a href="javascript:;" class="menu-link menu-toggle">
+      <i class="menu-icon flaticon2-telegram-logo"></i>
+      <span class="menu-text">Mails</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <li class="menu-item menu-item-parent" aria-haspopup="true">
+          <span class="menu-link">
+            <span class="menu-text">Mails</span>
+          </span>
+        </li>
+        {% if is_constituent %}
+        <li class="menu-item" aria-haspopup="true">
+          <a href="incident" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Incident Reports</span>
+          </a>
+        </li>
+        <li class="menu-item" aria-haspopup="true">
+          <a href="request" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Request Form</span>
+          </a>
+        </li>
+
+        {% endif %} {% if is_mp or user.subadmin_for == user.active_constituency.id %}
+        <li class="menu-item" aria-haspopup="true">
+          <a href="send-email" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Send Email</span>
+          </a>
+        </li>
+         <li class="menu-item" aria-haspopup="true">
+          <a href="messages" class="menu-link">
+            <i class="menu-bullet menu-bullet-line">
+              <span></span>
+            </i>
+            <span class="menu-text">Messages</span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </li>
+{% if is_constituent %}
+  <li id="assessment_p" style="display: none" class="menu-item" aria-haspopup="true">
+    <a href="assessment" class="menu-link">
+      <i class="menu-icon flaticon2-console"></i>
+      <span class="menu-text">Assessment</span>
+    </a>
+  </li>
+  {% endif %}
+  {% if is_assemblyman %}
+  <li class="menu-item" aria-haspopup="true">
+    <a href="action-assemblyman" class="menu-link">
+      <i class="menu-icon flaticon2-console"></i>
+      <span class="menu-text">Action Plan</span>
+    </a>
+  </li>
+  {% endif %} {% if is_mp %}
+  <li class="menu-item" aria-haspopup="true">
+    <a href="action-mp" class="menu-link">
+      <i class="menu-icon flaticon2-console"></i>
+      <span class="menu-text">Action Plan</span>
+    </a>
+  </li>
+  {% endif %}
+
+  <li id="forum_p" style="display: none" class="menu-item" aria-haspopup="true">
+    <a href="javascript:;" class="menu-link">
+      <i class="menu-icon flaticon2-console"></i>
+      <span class="menu-text">Forum</span>
+    </a>
+  </li>
+</ul>
+
+<script>
+    $.get(
+  "https://api.rennintech.com/general/get-assessment-status/",
+  function (data) {
+    if (data.status === 200) {
+      if (data.assessment_status === true) {
+        $("#assessment_p").show();
+
+      }
+    }
+  }
+  );
+      $.get(
+  "https://api.rennintech.com/general/get-forum-status/",
+  function (data) {
+    if (data.status === 200) {
+      if (data.forum_status === true) {
+        $("#forum_p").show();
+
+      }
+    }
+  }
+  );
+</script>
