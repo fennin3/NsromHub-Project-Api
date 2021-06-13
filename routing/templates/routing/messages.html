@@ -246,7 +246,7 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
     $("#receiver_id").val(userId);
 
     var message_box = $('.messages');
-    $.get(`https://api.rennintech.commp-operations/retrieve-messages/${user_details.system_id_for_user}/${userId}/`, function(data) {
+    $.get(`https://api.rennintech.com/mp-operations/retrieve-messages/${user_details.system_id_for_user}/${userId}/`, function(data) {
 
         if (data.status === 200) {
             KTApp.unblock("#chart_card");
