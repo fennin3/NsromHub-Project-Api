@@ -102,12 +102,7 @@ class RetrieveProjectsView(APIView):
             projects = []
 
             try:
-                for user in const.members.all():
-                    if user.is_mp == True:
-                        mp = user
-
-                print(mp)
-                
+                mp = User.objects.filter(active_constituency=user.active_constituency).first()
                 
 
                 
