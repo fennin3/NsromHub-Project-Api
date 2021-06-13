@@ -69,7 +69,7 @@
     var sendBtn = KTUtil.getById("project_send"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15";
     var endp = '';
-        if(!user_details.mp) {
+        if(!user_details.is_mp) {
            endp = `https://api.rennintech.com/constituent-operations/create-project-for-mp/`;
         }else {
            endp = `https://api.rennintech.com/mp-operations/create-project/`;
