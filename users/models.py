@@ -27,7 +27,8 @@ class Region(models.Model):
 class Constituency(models.Model):
     name = models.CharField(max_length=100)
     country = models.ForeignKey(Region, on_delete=models.CASCADE, blank=True, null=True, related_name="constituencies")
-
+    description = models.CharField(max_length=50000, null=True, blank=True)
+    image = models.ImageField(upload_to="contistituency_image/", default="")
 
     class Meta:
         verbose_name_plural ="Constituencies"
