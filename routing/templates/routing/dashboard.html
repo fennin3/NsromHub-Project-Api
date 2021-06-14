@@ -226,7 +226,7 @@ aria-hidden="true"
 
 
 $.get(
-  "http://localhost:8000/general/get-actionplan-status/",
+  "https://api.rennintech.com/general/get-actionplan-status/",
   function (data) {
     if (data.status === 200) {
       if (data.action_plan_status === true) {
@@ -240,7 +240,7 @@ $.get(
 
 var fetchActions = () => {
   $.get(
-    "http://localhost:8000/constituent-operations/action-titles/",
+    "https://api.rennintech.com/constituent-operations/action-titles/",
     function (data) {
       if (data.status === 200) {
         var actions = data.data;
@@ -294,7 +294,7 @@ $("#send_action_data").on("click", function (e) {
   var actionBtn = KTUtil.getById("send_action_data"),
   _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
-  var endp = `http://localhost:8000/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
+  var endp = `https://api.rennintech.com/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
 
   var _one = $("#one").val(), _two = $("#two").val(), _three = $("#three").val();
   var d_send = {
@@ -367,7 +367,7 @@ $("#send_action_data").on("click", function (e) {
 });
 
 var fetchData = () => {
-  var endpoint = `http://localhost:8000/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
+  var endpoint = `https://api.rennintech.com/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
 
   $.ajax({
     url: endpoint,
@@ -510,7 +510,7 @@ var toggleShow = ($this) => {
     var const_id = $($this).data("id");
     var const__name = $($this).data("name");
 
-    var endpoint = `http://localhost:8000/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
+    var endpoint = `https://api.rennintech.com/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
 
     $.ajax({
       url: endpoint,
@@ -767,7 +767,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `http://localhost:8000/users/create-secondary-account/`;
+    var endpoint = `https://api.rennintech.com/users/create-secondary-account/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -843,7 +843,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `http://localhost:8000/constituent-operations/comment-on-post/`;
+    var endpoint = `https://api.rennintech.com/constituent-operations/comment-on-post/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -920,7 +920,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `http://localhost:8000/mp-operations/create-post/`;
+    var endpoint = `https://api.rennintech.com/mp-operations/create-post/`;
     $.ajax({
       url: endpoint,
       method: "POST",
@@ -986,7 +986,7 @@ var toggleShow = ($this) => {
   var sendLike = ($this) => {
     var like = $($this);
     var project_id = $($this).data("id");
-    var endpoint = `http://localhost:8000/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
+    var endpoint = `https://api.rennintech.com/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
 
     var curVal = like.find("span.like_num").text();
 

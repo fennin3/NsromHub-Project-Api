@@ -176,7 +176,7 @@ jQuery(document).ready(function() {
 
 
     var message_box = $('.forum-messages');
-    $.get(`http://127.0.0.1:8000/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
+    $.get(`https://api.rennintech.com/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
         console.log('forum msg', data.data);
         if (data.status === 200) {
             KTApp.unblock("#chart_card");
