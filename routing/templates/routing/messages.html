@@ -358,10 +358,10 @@ $("#mp-message-send").on("click", function (e) {
       $.ajax({
                     url: `https://api.rennintech.com/chatsystem/send-message/`,
                     type: "POST",
-                    data:JSON.stringify({sender:user_details.system_id_for_user,receiver,message:message_body}),
+                    data:{sender:user_details.system_id_for_user,receiver,message:message_body},
                     dataType: "json",
                     cache: false,
-                    processData: false,
+                    processData: true,
 
                     success: function(data) {
                         if (data.status ===200) {

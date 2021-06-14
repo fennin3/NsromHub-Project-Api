@@ -153,14 +153,14 @@ aria-hidden="true"
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-lg-3 col-form-label" for="constituenciess"
+        <label class="col-lg-3 col-form-label" for="constituencies_"
         >Constituency: *</label
         >
         <div class="col-lg-6">
           <select
           class="form-control form-control-solid"
           name="constituency"
-          id="constituenciess"
+          id="constituencies_"
           disabled
           ></select>
         </div>
@@ -226,7 +226,7 @@ aria-hidden="true"
 
 
 $.get(
-  "https://api.rennintech.com/general/get-actionplan-status/",
+  "http://localhost:8000/general/get-actionplan-status/",
   function (data) {
     if (data.status === 200) {
       if (data.action_plan_status === true) {
@@ -240,7 +240,7 @@ $.get(
 
 var fetchActions = () => {
   $.get(
-    "https://api.rennintech.com/constituent-operations/action-titles/",
+    "http://localhost:8000/constituent-operations/action-titles/",
     function (data) {
       if (data.status === 200) {
         var actions = data.data;
@@ -294,7 +294,7 @@ $("#send_action_data").on("click", function (e) {
   var actionBtn = KTUtil.getById("send_action_data"),
   _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
-  var endp = `https://api.rennintech.com/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
+  var endp = `http://localhost:8000/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
 
   var _one = $("#one").val(), _two = $("#two").val(), _three = $("#three").val();
   var d_send = {
@@ -367,7 +367,7 @@ $("#send_action_data").on("click", function (e) {
 });
 
 var fetchData = () => {
-  var endpoint = `https://api.rennintech.com/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
+  var endpoint = `http://localhost:8000/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
 
   $.ajax({
     url: endpoint,
@@ -400,7 +400,7 @@ var fetchData = () => {
               <div class="card-body">
               <div class="d-flex align-items-center">
               <div class="symbol symbol-40 symbol-light-success mr-5">
-              <div class="symbol-label" style="background-image: url(${'https://api.rennintech.com' + feeds[feed].mp.profile_picture})">
+              <div class="symbol-label" style="background-image: url(${feeds[feed].mp.profile_picture})">
               </div></div>
 <div class="d-flex flex-column flex-grow-1">
               <a href="#" class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">${
@@ -412,7 +412,7 @@ var fetchData = () => {
               </div></div><div class="pt-4">${
                 feeds[feed].media === null
                 ? ""
-                : `<div class="bgi-no-repeat bgi-size-contain rounded min-h-265px" style="background-position: center;background-image: url(${'https://api.rennintech.com' + feeds[feed].media})"></div>`
+                : `<div class="bgi-no-repeat bgi-size-contain rounded min-h-265px" style="background-position: center;background-image: url(${feeds[feed].media})"></div>`
               }
               <div class="d-flex text-dark-75 font-size-lg font-weight-normal pt-5 mb-2">${
                 feeds[feed].description
@@ -510,7 +510,7 @@ var toggleShow = ($this) => {
     var const_id = $($this).data("id");
     var const__name = $($this).data("name");
 
-    var endpoint = `https://api.rennintech.com/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
+    var endpoint = `http://localhost:8000/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
 
     $.ajax({
       url: endpoint,
@@ -575,14 +575,14 @@ var toggleShow = ($this) => {
 
   var active_const = $(".active_constituency");
   var regions = $("#regions"),
-  constituenciess = $("#constituenciess"),
+  constituencies_ = $("#constituencies_"),
   towns = $("#towns"),
   area = $("#areas");
 
   regions.select2({
     placeholder: "Select Region",
   });
-  constituenciess.select2({
+  constituencies_.select2({
     placeholder: "Select Constituency",
   });
 
@@ -607,15 +607,15 @@ var toggleShow = ($this) => {
       placeholder: "Select Region",
     });
     regions.removeAttr("disabled");
-    constituenciess.attr("disabled", "disabled");
-    constituenciess.html("").select2({ data: [] });
+    constituencies_.attr("disabled", "disabled");
+    constituencies_.html("").select2({ data: [] });
   };
 
   regions.on("change", function (e) {
-    constituenciess
+    constituencies_
     .attr("disabled", "disabled")
     .html("")
-    .select2({ data: [], placeholder: "Select Constituency" });
+    .select2({ data: [], placeholder    : "Select Constituency" });
     towns
     .attr("disabled", "disabled")
     .html("")
@@ -635,17 +635,17 @@ var toggleShow = ($this) => {
       );
     var cons = [];
 
-    constituency[0].constituenciess.forEach(({ id, name }, key) => {
+    constituency[0].constituencies.forEach(({ id, name }, key) => {
       cons.push({ id, text: name });
     });
 
-    constituenciess.html("").select2({
+    constituencies_.html("").select2({
       data: [{ id: "", text: "" }, ...cons],
       placeholder: "Select Constituency",
     });
-    constituenciess.removeAttr("disabled");
+    constituencies_.removeAttr("disabled");
   });
-  constituenciess.on("change", function (e) {
+  constituencies_.on("change", function (e) {
     towns
     .attr("disabled", "disabled")
     .html("")
@@ -667,7 +667,7 @@ var toggleShow = ($this) => {
       );
     var tns = [];
 
-    var town = constituency[0].constituenciess.filter(
+    var town = constituency[0].constituencies.filter(
       (value, key) => value.id == const_id
       );
     console.log("towns", town);
@@ -689,7 +689,7 @@ var toggleShow = ($this) => {
     .html("")
     .select2({ data: [], placeholder: "Select Area" });
     var town_id = $(this).val();
-    var const_id = $("#constituenciess").val();
+    var const_id = $("#constituencies_").val();
     var reg_id = $("#regions").val();
     var count_id = $("#countries").val();
     var country = sessionStorage.getItem("countries");
@@ -702,7 +702,7 @@ var toggleShow = ($this) => {
       );
     var ars = [];
 
-    var town = constituency[0].constituenciess.filter(
+    var town = constituency[0].constituencies.filter(
       (value, key) => value.id == const_id
       );
 
@@ -722,27 +722,27 @@ var toggleShow = ($this) => {
 
   $("#user_profile").css(
     "background-image",
-    `url(${'https://api.rennintech.com' + user_details.profile_picture})`
+    `url(${user_details.profile_picture})`
     );
   $("#countries").val(user_details.country);
   var const_list = $("#const_list");
-  var constituenciess = user_details.constituency;
+  var constituencies = user_details.constituency;
   active_const.text(user_details.active_constituency.name);
   var add_new_const = $("#add_new_const");
   add_new_const.show();
 
   fetchData();
   active_const.removeAttr("disabled");
-  if (constituenciess.length > 1) {
+  if (constituencies.length > 1) {
     add_new_const
     .text("Max Limit Reached")
     .attr("onclick", "return false;")
     .removeAttr("data-target")
     .removeAttr("data-toggle");
   }
-  for (var con in constituenciess) {
+  for (var con in constituencies) {
     const_list.append(
-      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituenciess[con].name}" data-id="${constituenciess[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituenciess[con].name}</span></a></li>`
+      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituencies[con].name}" data-id="${constituencies[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituencies[con].name}</span></a></li>`
       );
   }
 
@@ -750,7 +750,7 @@ var toggleShow = ($this) => {
   $("#add_const_new").on("click", function (e) {
     e.preventDefault();
     var region = $("#regions").val(),
-    constituency = $("#constituenciess").val(),
+    constituency = $("#constituencies_").val(),
     town = $("#towns").val(),
     area = $("#areas").val(),
     sendBtn = KTUtil.getById("add_const_new"),
@@ -767,7 +767,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `https://api.rennintech.com/users/create-secondary-account/`;
+    var endpoint = `http://localhost:8000/users/create-secondary-account/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -843,7 +843,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `https://api.rennintech.com/constituent-operations/comment-on-post/`;
+    var endpoint = `http://localhost:8000/constituent-operations/comment-on-post/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -856,7 +856,6 @@ var toggleShow = ($this) => {
       processData: true,
       dataType: "json",
       beforeSend: function () {
-        console.log("edn", endpoint);
         KTApp.blockPage({
           overlayColor: "#000000",
           state: "primary",
@@ -921,7 +920,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `https://api.rennintech.com/mp-operations/create-post/`;
+    var endpoint = `http://localhost:8000/mp-operations/create-post/`;
     $.ajax({
       url: endpoint,
       method: "POST",
@@ -987,7 +986,7 @@ var toggleShow = ($this) => {
   var sendLike = ($this) => {
     var like = $($this);
     var project_id = $($this).data("id");
-    var endpoint = `https://api.rennintech.com/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
+    var endpoint = `http://localhost:8000/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
 
     var curVal = like.find("span.like_num").text();
 
@@ -1035,7 +1034,7 @@ var toggleShow = ($this) => {
   var loadPostContainer = () => {
     $(".user_image").css(
       "background-image",
-      `url(${'https://api.rennintech.com' + user_details.profile_picture})`
+      `url(${user_details.profile_picture})`
       );
     $('.user_name').text(user_details.full_name);
     $('.summernote').summernote({
