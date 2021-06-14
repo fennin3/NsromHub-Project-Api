@@ -170,12 +170,13 @@ jQuery(document).ready(function() {
         state: "primary",
     });
 
+
     socket.emit('forumed', {room:user_details.active_constituency.name});
 
 
 
     var message_box = $('.forum-messages');
-    $.get(`https://api.rennintech.com/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
+    $.get(`http://127.0.0.1:8000/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
         console.log('forum msg', data.data);
         if (data.status === 200) {
             KTApp.unblock("#chart_card");
@@ -257,9 +258,26 @@ $("#forum-message-send").on("click", function (e) {
   }
   $("#forum_body_send").val("");
 
-  socket.emit('msg_form', {sender:user_details.system_id_for_user, message:message_body});
+      $.ajax({
+                    url: `https://api.rennintech.com/general/send-message-to-forum/`,
+                    type: "POST",
+                    dataType: "json",
+                    data:JSON.stringify({sender:user_details.system_id_for_user,message:message_body}),
+                    cache: false,
+                    processData: false,
+                    success: function(data) {
+                        if (data.status ===200) {
+                     socket.emit('msg_form', {sender:data.sender, message:message_body});
 
+                        }else {
+                           console.warn('Message sending failed');
+                        }
 
+                    },
+                    error: function(error) {
+                        console.log('an error occurred',error);
 
+                    }
+                });
 });
 </script>
