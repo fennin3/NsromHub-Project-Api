@@ -153,14 +153,14 @@ aria-hidden="true"
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-lg-3 col-form-label" for="constituencies"
+        <label class="col-lg-3 col-form-label" for="constituenciess"
         >Constituency: *</label
         >
         <div class="col-lg-6">
           <select
           class="form-control form-control-solid"
           name="constituency"
-          id="constituencies"
+          id="constituenciess"
           disabled
           ></select>
         </div>
@@ -575,14 +575,14 @@ var toggleShow = ($this) => {
 
   var active_const = $(".active_constituency");
   var regions = $("#regions"),
-  constituencies = $("#constituencies"),
+  constituenciess = $("#constituenciess"),
   towns = $("#towns"),
   area = $("#areas");
 
   regions.select2({
     placeholder: "Select Region",
   });
-  constituencies.select2({
+  constituenciess.select2({
     placeholder: "Select Constituency",
   });
 
@@ -607,12 +607,12 @@ var toggleShow = ($this) => {
       placeholder: "Select Region",
     });
     regions.removeAttr("disabled");
-    constituencies.attr("disabled", "disabled");
-    constituencies.html("").select2({ data: [] });
+    constituenciess.attr("disabled", "disabled");
+    constituenciess.html("").select2({ data: [] });
   };
 
   regions.on("change", function (e) {
-    constituencies
+    constituenciess
     .attr("disabled", "disabled")
     .html("")
     .select2({ data: [], placeholder: "Select Constituency" });
@@ -635,17 +635,17 @@ var toggleShow = ($this) => {
       );
     var cons = [];
 
-    constituency[0].constituencies.forEach(({ id, name }, key) => {
+    constituency[0].constituenciess.forEach(({ id, name }, key) => {
       cons.push({ id, text: name });
     });
 
-    constituencies.html("").select2({
+    constituenciess.html("").select2({
       data: [{ id: "", text: "" }, ...cons],
       placeholder: "Select Constituency",
     });
-    constituencies.removeAttr("disabled");
+    constituenciess.removeAttr("disabled");
   });
-  constituencies.on("change", function (e) {
+  constituenciess.on("change", function (e) {
     towns
     .attr("disabled", "disabled")
     .html("")
@@ -667,7 +667,7 @@ var toggleShow = ($this) => {
       );
     var tns = [];
 
-    var town = constituency[0].constituencies.filter(
+    var town = constituency[0].constituenciess.filter(
       (value, key) => value.id == const_id
       );
     console.log("towns", town);
@@ -689,7 +689,7 @@ var toggleShow = ($this) => {
     .html("")
     .select2({ data: [], placeholder: "Select Area" });
     var town_id = $(this).val();
-    var const_id = $("#constituencies").val();
+    var const_id = $("#constituenciess").val();
     var reg_id = $("#regions").val();
     var count_id = $("#countries").val();
     var country = sessionStorage.getItem("countries");
@@ -702,7 +702,7 @@ var toggleShow = ($this) => {
       );
     var ars = [];
 
-    var town = constituency[0].constituencies.filter(
+    var town = constituency[0].constituenciess.filter(
       (value, key) => value.id == const_id
       );
 
@@ -726,23 +726,23 @@ var toggleShow = ($this) => {
     );
   $("#countries").val(user_details.country);
   var const_list = $("#const_list");
-  var constituencies = user_details.constituency;
+  var constituenciess = user_details.constituency;
   active_const.text(user_details.active_constituency.name);
   var add_new_const = $("#add_new_const");
   add_new_const.show();
 
   fetchData();
   active_const.removeAttr("disabled");
-  if (constituencies.length > 1) {
+  if (constituenciess.length > 1) {
     add_new_const
     .text("Max Limit Reached")
     .attr("onclick", "return false;")
     .removeAttr("data-target")
     .removeAttr("data-toggle");
   }
-  for (var con in constituencies) {
+  for (var con in constituenciess) {
     const_list.append(
-      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituencies[con].name}" data-id="${constituencies[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituencies[con].name}</span></a></li>`
+      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituenciess[con].name}" data-id="${constituenciess[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituenciess[con].name}</span></a></li>`
       );
   }
 
@@ -750,7 +750,7 @@ var toggleShow = ($this) => {
   $("#add_const_new").on("click", function (e) {
     e.preventDefault();
     var region = $("#regions").val(),
-    constituency = $("#constituencies").val(),
+    constituency = $("#constituenciess").val(),
     town = $("#towns").val(),
     area = $("#areas").val(),
     sendBtn = KTUtil.getById("add_const_new"),
