@@ -262,7 +262,7 @@ $("#current_year").text( current_date.getFullYear());
               <div
               class="bgi-no-repeat bgi-size-contain rounded  min-h-180px w-100"
               style="background-position: center;
-              background-image: url(${'https://api.rennintech.com' + data.data[d].image});
+              background-image: url(https://api.rennintech.com${data.data[d].image});
               "
               ></div>
              
@@ -285,7 +285,7 @@ $("#current_year").text( current_date.getFullYear());
           <div
           class="d-flex flex-center"
             onclick="sharePlan(this)"
-            data-image="${encodeURIComponent('https://api.rennintech.com' + data.data[d].image)}"
+            data-image="${encodeURIComponent('https://api.rennintech.com'+data.data[d].image)}"
             data-area="${data.data[d].area.name}"
           data-toggle="tooltip"
           title=""
