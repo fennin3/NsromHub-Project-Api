@@ -111,7 +111,7 @@ class RetrieveAssessmentSwitchStatus(APIView):
             data = {
                 "status": status.HTTP_200_OK,
                 "message":"Successful",
-                "forum_status":assessment
+                "forum_status":f"{assessment}"
             }
 
             return Response(data, status.HTTP_200_OK)
@@ -120,6 +120,7 @@ class RetrieveAssessmentSwitchStatus(APIView):
 
             data = {
                 "status": status.HTTP_400_BAD_REQUEST,
+                "error":str(e),
                 "message":"Sorry, something went wrong." 
             }
             return Response(data, status.HTTP_400_BAD_REQUEST)

@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     'chatsystem'
 ]
 
+SESSION_COOKIE_SECURE=True
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
