@@ -262,9 +262,9 @@ $("#forum-message-send").on("click", function (e) {
                     url: `https://api.rennintech.com/general/send-message-to-forum/`,
                     type: "POST",
                     dataType: "json",
-                    data:JSON.stringify({sender:user_details.system_id_for_user,message:message_body}),
+                    data:{sender:user_details.system_id_for_user,message:message_body},
                     cache: false,
-                    processData: false,
+                    processData: true,
                     success: function(data) {
                         if (data.status ===200) {
                      socket.emit('msg_form', {sender:data.sender, message:message_body});
