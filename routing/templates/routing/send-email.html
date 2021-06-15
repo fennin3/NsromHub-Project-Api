@@ -15,7 +15,8 @@
             required
           >
             <option value="all">All Constituents</option>
-            <option value="custom">Custom</option>
+            <option value="individual">Individual</option>
+              <option value="area">Area</option>
           </select>
           <span class="form-text text-muted">Please select category</span>
         </div>
@@ -28,7 +29,19 @@
             name="receiver_id"
           ></select>
           <span class="form-text text-muted"
-            >Please select constituents (s)</span
+            >Please select constituent</span
+          >
+        </div>
+           <div class="form-group area_s" style="display: none">
+          <label for="constituents">Area *:</label>
+          <select
+            class="form-control form-control-solid select2"
+            style="width: 100% !important"
+            id="areas"
+            name="area_id"
+          ></select>
+          <span class="form-text text-muted"
+            >Please select Area</span
           >
         </div>
         <div class="form-group">
@@ -86,10 +99,18 @@
     height: 250,
   });
   $("#constituents").select2({
-    placeholder: "Select constituents (s)",
+    placeholder: "Fetching constituents",
     language: {
       noResults: function () {
         return $("No registered constituent");
+      },
+    },
+  });
+    $("#areas").select2({
+    placeholder: "Fetching areas",
+    language: {
+      noResults: function () {
+        return $("No area available");
       },
     },
   });
@@ -97,11 +118,17 @@
   $(".selectpicker").selectpicker();
   $("#category").on("change", function (e) {
     if (this.value !== "" && this.value !== "all") {
-      if (this.value === "custom") {
+      if (this.value === "individual") {
         $(".const_s").fadeIn();
+         $(".area_s").fadeOut();
+      }else if (this.value ==='area') {
+            $(".area_s").fadeIn();
+         $(".const_s").fadeOut();
+
       }
     } else {
       $(".const_s").fadeOut();
+      $(".area_s").fadeOut();
     }
   });
 
@@ -137,15 +164,50 @@
     },
   });
 
+  $.ajax({
+    url: `https://api.rennintech.com/mp-operations/get-areas-for-mp/${user_details.system_id_for_user}/`,
+    method: "POST",
+    data: [],
+    cache: false,
+    processData: false,
+    dataType: "json",
+
+    success: function (data) {
+      if (data.areas.length > 0) {
+        let arrs_ = [];
+        data.areas.forEach(({ id, name }, key) => {
+          arrs_.push({ id, text: name });
+        });
+
+        $("#areas")
+          .html("")
+          .select2({
+            data: [{ id: "", text: "" }, ...arrs_],
+            placeholder: "Select Area",
+          });
+      } else {
+        $("#areas")
+          .html("")
+          .select2({ data: [], placeholder: "No areas available" });
+      }
+    },
+    error: function (error) {
+      console.log("AREA ERROR", error);
+    },
+  });
+
   $("form#compose_form").on("submit", function (e) {
     e.preventDefault();
+    var area_id = $("#areas").val();
 
     var sendBtn = KTUtil.getById("compose_send"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
     var endp = `https://api.rennintech.com/mp-operations/mp-send-emails/`;
-    if ($("#category") === "custom") {
+    if ($("#category") === "individual") {
       endp = `https://api.rennintech.com/mp-operations/mp-send-email/`;
+    } else if($("#category") === "area") {
+        endp = `https://api.rennintech.com/mp-operations/send-email-to-area/${area_id}/`;
     }
     var formData = new FormData(document.getElementById("compose_form"));
     $.ajax({
@@ -160,7 +222,6 @@
         KTUtil.btnWait(sendBtn, _buttonSpinner, "Processing", true);
       },
       success: function (data) {
-        console.log("new message", data);
         swal.fire({
           text: data.message,
           icon: "success",

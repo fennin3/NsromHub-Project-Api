@@ -536,7 +536,7 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     # is_superuser=request.data['is_superuser'],
                     is_constituent = True,
                     system_id_for_user=system_id_for_user,
-                    is_active=False,
+                    is_active=True,
                     active_constituency=constituency,
                     is_subadmin=True,
                     subadmin_for=mp.active_constituency
@@ -587,7 +587,7 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     # is_superuser=request.data['is_superuser'],
                     is_constituent = True,
                     system_id_for_user=system_id_for_user,
-                    is_active=False,
+                    is_active=True,
                     active_constituency=constituency,
                     is_security_person =True
                     )
@@ -629,7 +629,7 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     # is_superuser=request.data['is_superuser'],
                     is_constituent = True,
                     system_id_for_user=system_id_for_user,
-                    is_active=False,
+                    is_active=True,
                     active_constituency=constituency,
                     is_assembly_man =True
                     )
@@ -672,7 +672,7 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     # is_superuser=request.data['is_superuser'],
                     is_constituent = True,
                     system_id_for_user=system_id_for_user,
-                    is_active=False,
+                    is_active=True,
                     active_constituency=constituency,
                     is_medical_center =True
                     )
@@ -715,7 +715,7 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     # is_superuser=request.data['is_superuser'],
                     is_constituent = True,
                     system_id_for_user=system_id_for_user,
-                    is_active=False,
+                    is_active=True,
                     active_constituency=constituency,
                     )
 
