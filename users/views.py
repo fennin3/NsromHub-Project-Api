@@ -281,8 +281,16 @@ class UserLoginView(APIView):
 
             }
         status_code = status.HTTP_200_OK
-
-        return Response(response, status=status_code)
+        if user_.email_verified:
+            return Response(response, status=status_code)
+        else:
+            return Response(
+                {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                    "message":"You have to verify your account.",
+                    "email_verified":user_.email_verified,
+                }
+            )
 
 
 class SecondaryRegistration(UpdateAPIView):
