@@ -276,6 +276,7 @@ class UserLoginView(APIView):
             'active_constituency':ac.data,
             'active_town':at.data,
             'active_area':ar.data,
+            "email_verified":user_.email_verified,
             "subadmin_for":sub.data
 
             }
@@ -376,8 +377,11 @@ class OTPEmailVerificationView(APIView):
         try:
             user = User.objects.get(email=email.value)
             code = OTPCode.objects.get(code_for=email.value, code=otp_code.value)   
+            code.delete()
             user.is_active = True
+            user.email_verified = True
             user.save() 
+            
             data = {
                 "status":status.HTTP_202_ACCEPTED,
                 "message":"email has been verified"
@@ -403,6 +407,7 @@ class OTPPhoneVerificationView(APIView):
         try:
             user = User.objects.get(system_id_for_user=user_id.value)
             code = OTPCode.objects.get(code_for=user_id.value, code=otp_code.value)   
+            code.delete()
             user.phone_verified = True
             user.save() 
             data = {

@@ -86,6 +86,7 @@ class CustomUser(AbstractUser):
     profile_picture = models.ImageField(upload_to="user_profile_pics/", blank=True, null=True, default="default.jpg")
     is_subadmin = models.BooleanField(default=False)
     subadmin_for = models.ForeignKey(Constituency, null=True, blank=True, on_delete=models.CASCADE, related_name="subadmins")
+    email_verified = models.BooleanField(default=False)
     REQUIRED_FIELDS = []
 
     # class Meta:

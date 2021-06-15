@@ -37,75 +37,6 @@ class ConstituentRegisterSerializer(serializers.ModelSerializer):
 
     
 
-    
-    # def create(self, validated_data):
-
-    #     country = get_object_or_404(Country, id=validated_data['country'])
-    #     region = get_object_or_404(Region, id=validated_data['region'])
-    #     constituency = get_object_or_404(Constituency, id= validated_data['constituency'])
-
-
-    #     # Generating A valid user ID
-    #     CD = countryCode[country.name]
-    #     system_id_for_user =""
-    #     while True:
-    #         nums = generate_userID()
-    #         system_id_for_user = str(CD)+str(nums)
-    #         user = User.objects.filter(system_id_for_user=system_id_for_user)
-
-    #         if user.exists():
-    #             pass
-    #         else:
-    #             system_id_for_user = system_id_for_user
-    #             break
-
-    #     email = validated_data['email']
-    #     contact = validated_data['contact']
-    #     if User.objects.filter(email=email).exists():
-    #         raise serializers.ValidationError("Email already exist")
-    #     elif User.objects.filter(contact=contact).exists():
-    #         raise serializers.ValidationError("Contact already exist")
-    #     else:
-        
-    #     # Creating User and Constituency Profile
-    #         user = User.objects.create(
-    #         email=validated_data['email'],
-    #         # username=validated_data['username'],
-    #         full_name=validated_data['full_name'],
-    #         date_of_birth=validated_data['date_of_birth'],
-    #         contact=validated_data['contact'],
-    #         country=country,
-            
-    #         is_constituent = True,
-    #         system_id_for_user=system_id_for_user,
-    #         is_active=False
-    #         )
-
-    #         user.set_password(validated_data['password'])
-    #         user.save()
-
-    #         user.constituency.add(constituency)
-    #         user.region.add(region)
-
-
-    #         constituent = Constituent(
-    #             user = user,
-    #             voters_id = validated_data['voters_id'],
-    #             town = validated_data['town']
-    #         )
-    #         otp_code = generate_OTP()
-
-    #         otp = OTPCode.objects.create(code_for=validated_data['email'],code=otp_code)
-    #         otp.save()
-
-    #         sending_mail(f"Hello {validated_data['full_name']}\nThis is your verification code: {otp_code}","NsromaHub Account email verification", validated_data['email'])
-    #         constituent.save()
-
-
-
-
-    #         return user
-
 
 class MPRegisterSerializer(serializers.ModelSerializer):
     mp_id = serializers.CharField(write_only=True)
@@ -120,59 +51,6 @@ class MPRegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     
-
-    
-    # def create(self, validated_data):
-
-    #     country = get_object_or_404(Country, id=validated_data['country'])
-    #     region = get_object_or_404(Region, id=validated_data['region'])
-    #     constituency = get_object_or_404(Constituency, id= validated_data['constituency'])
-
-    #     # Generating A valid user ID
-    #     CD = countryCode[country.name]
-    #     system_id_for_user =""
-    #     while True:
-    #         nums = generate_userID()
-    #         system_id_for_user = str(CD)+str(nums)
-    #         user = User.objects.filter(system_id_for_user=system_id_for_user)
-
-    #         if user.exists():
-    #             pass
-    #         else:
-    #             system_id_for_user = system_id_for_user
-    #             break
-        
-    #     # Creating User and MP Profile
-    #     user = User.objects.create(
-    #     email=validated_data['email'],
-    #     # username=validated_data['username'],
-    #     full_name=validated_data['full_name'],
-    #     date_of_birth=validated_data['date_of_birth'],
-    #     contact=validated_data['contact'],
-    #     country=country,
-    #     is_mp = True,
-    #     system_id_for_user=system_id_for_user,
-    #     is_active=False
-    #     )
-
-    #     user.set_password(validated_data['password'])
-    #     user.save()
-
-    #     user.constituency.add(constituency)
-    #     user.region.add(region)
-
-
-    #     mp = MpProfile(
-    #         user = user,
-    #         mp_id = validated_data['mp_id'],  
-    #     )
-
-    #     mp.save()
-    #     print(validated_data)
-        
-    #     return user
-
-
 
 
 class UserLoginSerializer(serializers.Serializer):

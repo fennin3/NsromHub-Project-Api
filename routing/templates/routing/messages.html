@@ -23,7 +23,7 @@
 															</span>
 														</span>
 													</div>
-													<input type="text" class="form-control py-4 h-auto" placeholder="Search" />
+													<input type="text" id="searchConst" class="form-control py-4 h-auto" placeholder="Search" />
 												</div>
 												<!--end:Search-->
 												<!--begin:Users-->
@@ -210,7 +210,7 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
         for (let d of data.data) {
             const_chats.append(
                 `
-                <div style="cursor: pointer" onclick="fetchChat('${d.system_id_for_user}','${d.full_name}')" class="d-flex align-items-center justify-content-between mb-5">
+                <div style="cursor: pointer" data-name="${d.full_name}" onclick="fetchChat('${d.system_id_for_user}','${d.full_name}')" class="d-flex align-items-center justify-content-between mb-5">
 <div class="d-flex align-items-center">
 <div class="symbol symbol-circle symbol-50 mr-3">
 <img alt="${d.full_name}" src="https://api.rennintech.com${d.profile_picture}" />
@@ -260,9 +260,6 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
 
                     }
                 });
-
-
-
 
 
 
@@ -378,4 +375,14 @@ $("#mp-message-send").on("click", function (e) {
                     }
                 });
 });
+
+    $("#searchConst").on('keyup paste change', function (e) {
+        var all_chats = $("#constituents-chat"), value = $(this).val();
+        all_chats.children('div').each((data)=>{
+            console.log('search_data', data);
+           if (!$(data).data('name').includes(value)) {
+               $(data).hide();
+           }
+        });
+    })
 </script>
