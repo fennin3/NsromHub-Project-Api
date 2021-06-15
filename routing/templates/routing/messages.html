@@ -381,7 +381,9 @@ $("#mp-message-send").on("click", function (e) {
         all_chats.children('div').each((key,data)=>{
             console.log('search_data', data);
            if (!$(data).data('name').includes(value)) {
-               $(data).hide();
+               $(data).css('display','none !important');
+           }else {
+               $(data).css('display','block !important');
            }
         });
     })

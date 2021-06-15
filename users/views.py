@@ -289,7 +289,8 @@ class UserLoginView(APIView):
                     "status":status.HTTP_400_BAD_REQUEST,
                     "message":"You have to verify your account.",
                     "email_verified":user_.email_verified,
-                }
+                },
+                status=status.HTTP_400_BAD_REQUEST
             )
 
 
