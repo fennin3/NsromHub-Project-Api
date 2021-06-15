@@ -213,16 +213,6 @@ aria-hidden="true"
  if (!user_details.is_mp) {
   $("#mp_entry").hide();
 } 
- var getInitials = (string) => {
-  var names = string.split(" "),
-  initials = names[0].substring(0, 1).toUpperCase();
-
-  if (names.length > 1) {
-    initials += names[names.length - 1].substring(0, 1).toUpperCase();
-  }
-  return initials;
-};
-
 
 
 $.get(
@@ -572,8 +562,6 @@ var toggleShow = ($this) => {
       },
     });
   };
-
-  var active_const = $(".active_constituency");
   var regions = $("#regions"),
   constituencies_ = $("#constituencies_"),
   towns = $("#towns"),
@@ -720,32 +708,9 @@ var toggleShow = ($this) => {
     area.removeAttr("disabled");
   });
 
-  $("#user_profile").css(
-    "background-image",
-    `url(https://api.rennintech.com${user_details.profile_picture})`
-    );
   $("#countries").val(user_details.country);
-  var const_list = $("#const_list");
-  var constituencies = user_details.constituency;
-  active_const.text(user_details.active_constituency.name);
-  var add_new_const = $("#add_new_const");
-  add_new_const.show();
 
   fetchData();
-  active_const.removeAttr("disabled");
-  if (constituencies.length > 1) {
-    add_new_const
-    .text("Max Limit Reached")
-    .attr("onclick", "return false;")
-    .removeAttr("data-target")
-    .removeAttr("data-toggle");
-  }
-  for (var con in constituencies) {
-    const_list.append(
-      `<li class="navi-item"><a href="javascript:void(0)" data-name="${constituencies[con].name}" data-id="${constituencies[con].id}"  onclick="constChange(this)" class="navi-link"><span class="navi-text">${constituencies[con].name}</span></a></li>`
-      );
-  }
-
 
   $("#add_const_new").on("click", function (e) {
     e.preventDefault();
@@ -1029,7 +994,6 @@ var toggleShow = ($this) => {
     selector: '[data-toggle="tooltip"]',
     trigger: "hover",
   });
-
 
   var loadPostContainer = () => {
     $(".user_image").css(
