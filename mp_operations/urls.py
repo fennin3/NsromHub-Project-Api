@@ -65,6 +65,9 @@ urlpatterns = [
     path("read-incident-report/<id>/", SetIncidentReportRead.as_view(), name="read_ir"),
     path("read-requestform/<id>/", SetRequestFormRead.as_view(), name="read_rf"),
 
-    path("get-project-detail/<id>/", GetProjectDetail.as_view(), name="projectdetail")
+    path("get-project-detail/<id>/", GetProjectDetail.as_view(), name="projectdetail"),
+
+    path("get-areas-for-mp/<id>/", GetAreasForMP.as_view(), name="getareasformp"),
+    path("send-email-to-area/<areaid>/", SendEmailToAreaView.as_view(),name="sendareaemail")
     
 ] 

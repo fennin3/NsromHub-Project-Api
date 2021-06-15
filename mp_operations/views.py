@@ -22,6 +22,7 @@ from users.utils import generate_OTP, generate_userID, send_sms, sending_mail
 from constituent_operations.models import Assessment, ConductAssessment, ConductsForAssessment, ActionPlanToAssemblyMan
 from django.db.models import Count, Sum, Q
 from constituent_operations.serializers import  RetrieveMessageSerializer
+from users.serializers import ListAllAreaSerializer
 
 
 
@@ -1129,3 +1130,83 @@ class GetProjectDetail(APIView):
                 }
             )
 
+class GetAreasForMP(APIView):
+    permission_classes=()
+
+    def get(self, request, id):
+        areas = []
+        try:
+            mp  = User.objects.get(system_id_for_user=id)
+            const = mp.active_constituency
+            towns  = const.towns.all()
+
+            for town in towns:
+                areas = areas + list(town.areas.all())
+
+
+            areas  = ListAllAreaSerializer(areas, many=True).data
+        
+            return Response(
+                {
+                "status":status.HTTP_200_OK,
+                "areas": areas      
+                },
+                status=status.HTTP_200_OK
+            )   
+        except Exception as e:
+            print(e)
+            return Response(
+                {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message": "Sorry something went wrong."      
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )   
+            
+
+class SendEmailToAreaView(APIView):
+    permission_classes = ()
+    def post(self, request, areaid):
+        
+        try:
+            data = SendEmailSerializer(data=request.data)
+
+            data.is_valid(raise_exception=True)
+
+            # user_id = data['user_id'].value///////////////////////
+            subject = data['subject'].value
+            message = data['message'].value
+            attached_file = data['attached_file']
+
+            area = Area.objects.get(id=areaid)
+
+
+
+            emails = [user.email for user in User.objects.filter(active_area=area)]
+
+            print(emails)
+
+            mail = EmailMessage(
+                subject,
+                message,
+                'rennintech.com',
+                emails
+            )
+
+            
+
+            if request.data['attached_file']:
+                attached_file=request.data['attached_file']
+                mail.attach(attached_file.name, attached_file.read(), attached_file.content_type)
+            
+            mail.send()
+            data = {
+                "message":"Email has been sent successfully"
+            }
+        except Exception as e:
+            
+            data = {
+                "message":f"Sorry something went wrong, try again. {e}"
+            }
+
+        return Response(data, status=status.HTTP_200_OK)
