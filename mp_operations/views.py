@@ -1182,7 +1182,7 @@ class SendEmailToAreaView(APIView):
 
 
 
-            emails = [user.email for user in User.objects.filter(active_area=area)]
+            emails = [user.user.email for user in area.members.all()]
 
             print(emails)
 
