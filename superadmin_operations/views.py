@@ -111,11 +111,7 @@ class RetrieveAssessmentSwitchStatus(APIView):
             data = {
                 "status": status.HTTP_200_OK,
                 "message":"Successful",
-<<<<<<< HEAD
-                "forum_status":f"{assessment}"
-=======
                 "assessment_status":assessment
->>>>>>> b1cfda0df7413065ac31cec93ee766769a9b7391
             }
 
             return Response(data, status.HTTP_200_OK)
