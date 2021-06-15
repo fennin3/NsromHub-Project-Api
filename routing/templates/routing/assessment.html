@@ -51,10 +51,9 @@
     success: function (data) {
       if (data.status === 200) {
         var ass_data = data.projects, cond_data = data.conducts;
+          var ass_card = $("#assessment_card"), cond_card = $("#conduct_card");
         if (ass_data.length > 0 && cond_data.length > 0) {
 
-
-          var ass_card = $("#assessment_card"), cond_card = $("#conduct_card");
           ass_card.html('');
           cond_card.html('');
           for (let d in ass_data) {
