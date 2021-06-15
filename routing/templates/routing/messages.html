@@ -378,7 +378,7 @@ $("#mp-message-send").on("click", function (e) {
 
     $("#searchConst").on('keyup paste change', function (e) {
         var all_chats = $("#constituents-chat"), value = $(this).val();
-        all_chats.children('div').each((data)=>{
+        all_chats.children('div').each((key,data)=>{
             console.log('search_data', data);
            if (!$(data).data('name').includes(value)) {
                $(data).hide();
