@@ -360,7 +360,7 @@ class RetriveMessageView(APIView):
 
             mp = User.objects.filter(active_constituency=const,is_mp=True).first()
 
-            messages = Message.objects.filter(Q(sender=user) & Q(receiver=mp) | Q(sender=mp) & Q(receiver=user))
+            messages = Message.objects.filter(Q(sender=user) & Q(receiver=mp) | Q(sender=mp) & Q(receiver=user)).order_by('date_sent')
 
             
             data = RetrieveMessageSerializer(messages, many=True)

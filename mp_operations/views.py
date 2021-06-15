@@ -1057,7 +1057,7 @@ class RetrieveMessages(APIView):
 
             # const = mp.active_constituency
 
-            messages = Message.objects.filter(Q(sender=mp) & Q(receiver=consti) | Q(sender=consti) & Q(receiver=mp))
+            messages = Message.objects.filter(Q(sender=mp) & Q(receiver=consti) | Q(sender=consti) & Q(receiver=mp)).order_by('date_sent')
 
             
             data = RetrieveMessageSerializer(messages, many=True)
