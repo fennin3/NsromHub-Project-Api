@@ -397,18 +397,15 @@ class RetrieveActionPlanSummaryEachAreaForMPView(APIView):
 
         return Response(data, status.HTTP_200_OK)
 
-# Unconsumed endpoints.....................................
+
 class MakeSubAdminView(APIView):
     permission_classes = ()
     def post(self, request, id, subadmin_id):
-        print(id)
-        print(subadmin_id)
-    
+  
         try:
             mp = User.objects.get(system_id_for_user=id)
             user = User.objects.get(system_id_for_user=subadmin_id)
             const = user.more_info
-            print(const)
             const.is_subadmin=True
             user.is_subadmin=True
             user.subadmin_for=mp.active_constituency
