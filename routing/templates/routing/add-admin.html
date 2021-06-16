@@ -480,7 +480,7 @@ regions.on('change',function (e){
 
             validation.validate().then(function(status) {
               if (status == 'Valid') {
-                  var endpoint = `https://api.rennintech.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/sub_admin/`;
+                  var endpoint = `https://api.rennintech.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/subadmin/`;
                  
                 var $this = $('#add_sub_admin_form'),  signUpBtn = KTUtil.getById('add_sub_admin'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
                 $.ajax({
