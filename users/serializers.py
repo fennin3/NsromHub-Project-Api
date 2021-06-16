@@ -67,7 +67,7 @@ class UserLoginSerializer(serializers.Serializer):
         email_or_contact = data.get("email_or_contact", None)
         password = data.get("password", None)
 
-        if "@" in email_or_contact and "." in email_or_contact:
+        if "@" in email_or_contact and ".com" in email_or_contact:
 
             user = authenticate(email=email_or_contact, password=password)
         else:
