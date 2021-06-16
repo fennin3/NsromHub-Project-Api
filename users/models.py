@@ -87,6 +87,10 @@ class CustomUser(AbstractUser):
     is_subadmin = models.BooleanField(default=False)
     subadmin_for = models.ForeignKey(Constituency, null=True, blank=True, on_delete=models.CASCADE, related_name="subadmins")
     email_verified = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, default="Regular")
+    security_for = models.ForeignKey(Constituency, on_delete=models.CASCADE, null=True, blank=True, related_name="sec")
+    med_center_for = models.ForeignKey(Constituency, on_delete=models.CASCADE, null=True, blank=True, related_name="med")
+    assembly_man_for = models.ForeignKey(Constituency, on_delete=models.CASCADE, null=True, blank=True, related_name="ass")
     REQUIRED_FIELDS = []
 
     # class Meta:

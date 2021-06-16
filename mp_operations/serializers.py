@@ -72,7 +72,7 @@ class ListConstituentsSerializer(serializers.ModelSerializer):
     more_info = ConstituentInfoSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ['id','is_mp','is_constituent','is_security_person','is_medical_center', 'full_name', 'email', 'contact', 'date_of_birth', 'system_id_for_user','profile_picture', 'country', 'region', 'constituency', 'more_info']
+        fields = ['id','is_mp','is_constituent','is_security_person','is_medical_center', 'full_name', 'email', 'contact', 'date_of_birth', 'system_id_for_user','profile_picture','status', 'country', 'region', 'constituency', 'more_info']
         lookup_field = 'id'
 
 
