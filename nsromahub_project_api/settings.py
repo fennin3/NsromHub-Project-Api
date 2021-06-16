@@ -64,7 +64,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+
 ]
+
+
+MIDDLEWARE_CLASSES = (
+
+    'ssladmin.middleware.SSLAdmin',
+
+)
 
 ROOT_URLCONF = 'nsromahub_project_api.urls'
 
@@ -271,6 +279,8 @@ aws_secret = env('aws_secret')
 
 # STATIC_URL = "/static/"
 # STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_SCHEME', 'https')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
