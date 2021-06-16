@@ -68,6 +68,10 @@ urlpatterns = [
     path("get-project-detail/<id>/", GetProjectDetail.as_view(), name="projectdetail"),
 
     path("get-areas-for-mp/<id>/", GetAreasForMP.as_view(), name="getareasformp"),
-    path("send-email-to-area/<areaid>/", SendEmailToAreaView.as_view(),name="sendareaemail")
-    
+    path("send-email-to-area/<areaid>/", SendEmailToAreaView.as_view(),name="sendareaemail"),
+
+    path("switch-user-status/<mpid>/<id>/<status_>/", ChangeConstituencyStatus.as_view(), name="switchuserstatus")
+
+
+
 ] 

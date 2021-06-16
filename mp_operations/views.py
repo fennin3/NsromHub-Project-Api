@@ -1219,3 +1219,72 @@ class SendEmailToAreaView(APIView):
             }
 
         return Response(data, status=status.HTTP_200_OK)
+
+class ChangeConstituencyStatus(APIView):
+    permission_classes=()
+
+    def post(self, request,mpid, id, status_):
+        dd = {
+            "ass":"Assembly Man",
+            "med":"Medical Center",
+            "sec":"Security Personnel"
+        }
+        try:
+            mp = User.objects.get(system_id_for_user=mpid)
+            user = User.objects.get(system_id_for_user=id)
+            const = mp.active_constituency
+
+            if status_.lower() == "med":
+                user.is_security_person = False
+                user.is_medical_center = True
+                user.is_assembly_man = False
+                user.status = dd[status_.lower()]
+                user.med_center_for = const
+                user.assembly_man_for = None
+                user.security_for=None
+                user.save()
+            elif status_.lower() == "ass":
+                user.is_security_person = False
+                user.is_medical_center = False
+                user.is_assembly_man = True
+                user.status = dd[status_.lower()]
+                user.med_center_for = None
+                user.assembly_man_for = const
+                user.security_for=None
+                user.save()
+            elif status_.lower() == "sec":
+                user.is_security_person = True
+                user.is_medical_center = False
+                user.is_assembly_man = False
+                user.status = dd[status_.lower()]
+                user.med_center_for = None
+                user.assembly_man_for = None
+                user.security_for=const
+                user.save()
+            else:
+                user.is_security_person = False
+                user.is_medical_center = False
+                user.is_assembly_man = False
+                user.status = "Regular"
+                user.save()
+            
+
+            return  Response(
+                {
+                    "status":status.HTTP_200_OK,
+                    "message":f"{user.full_name}'s staus has been switched to {dd[status_]}"
+                },
+                status=status.HTTP_200_OK
+            )
+        except Exception as e:
+            print(e)
+            return Response(
+                {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                    "message":"Sorry, something went wrong."
+                },
+                status=status.status.HTTP_400_BAD_REQUEST
+            )
+
+
+
