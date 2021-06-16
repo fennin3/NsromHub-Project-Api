@@ -263,7 +263,8 @@ class RetrieveAllSubAdminsView(APIView):
     def post(self, request, id):
         try:
             mp = User.objects.get(system_id_for_user=id)
-            sub_admins = mp.sub_admins.all()
+            # sub_admins = mp.sub_admins.all()
+            sub_admins =  [sub_admin for sub_admin in mp.sub_admins.all() if sub_admin.user.is_active == True]
 
             data = MPRetrieveAllSubAdminSerializer(sub_admins,many=True)
 
@@ -405,11 +406,12 @@ class MakeSubAdminView(APIView):
     
         try:
             mp = User.objects.get(system_id_for_user=id)
-            const = Constituent.objects.get(user__system_id_for_user=subadmin_id)
-
+            user = User.objects.get(system_id_for_user=subadmin_id)
+            const = user.more_info
+            print(const)
             const.is_subadmin=True
-            const.user.is_subadmin=True
-            const.user.subadmin_for=mp.user.active_constituency
+            user.is_subadmin=True
+            user.subadmin_for=mp.active_constituency
             const.subadmin_for=mp
 
             const.save()
@@ -421,15 +423,15 @@ class MakeSubAdminView(APIView):
 
             data = {
                 "status":status.HTTP_200_OK,
-                "message":f"{const.user.full_name} is now your sub-admin."
+                "message":f"{user.full_name} is now your sub-admin."
             }
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
 
             data = {
-                "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
-                "message":"Sorry something went wrong, try again."
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":"Sorry, either the user is already your subadmin or something just went wrong."
             }
             return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -538,6 +540,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     system_id_for_user=system_id_for_user,
                     is_active=True,
                     active_constituency=constituency,
+                    active_town=town,
+                    active_area=area,
                     is_subadmin=True,
                     subadmin_for=mp.active_constituency
                     )
@@ -589,6 +593,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     system_id_for_user=system_id_for_user,
                     is_active=True,
                     active_constituency=constituency,
+                    active_town=town,
+                    active_area=area,
                     is_security_person =True
                     )
 
@@ -631,6 +637,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     system_id_for_user=system_id_for_user,
                     is_active=True,
                     active_constituency=constituency,
+                    active_town=town,
+                    active_area=area,
                     is_assembly_man =True
                     )
 
@@ -674,6 +682,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     system_id_for_user=system_id_for_user,
                     is_active=True,
                     active_constituency=constituency,
+                    active_town=town,
+                    active_area=area,
                     is_medical_center =True
                     )
 
@@ -717,6 +727,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     system_id_for_user=system_id_for_user,
                     is_active=True,
                     active_constituency=constituency,
+                    active_town=town,
+                    active_area=area,
                     )
 
                 
