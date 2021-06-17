@@ -113,16 +113,7 @@
 
         // columns definition
         columns: [
-          {
-            field: "id",
-            title: "#",
-            sortable: "asc",
-            width: 30,
-            type: "number",
-            selector: false,
-            textAlign: "center",
-          },
-          {
+            {
             field: "full_name",
             title: "Name",
             template: (row) => {
@@ -158,6 +149,25 @@
               return `<div class="font-weight-bolder font-size-lg mb-0">${row.contact}</div>`;
             },
           },
+
+            {
+              field: "status",
+              title: "Status",
+              template: (row =>{
+                  return `
+    <div class="btn-group" role="group">
+        <button id="statusBtn" type="button" class="btn btn-light-info font-weight-bold dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        ${row.status}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="statusBtn">
+            <a class="dropdown-item" onclick="editRole(this)" data-id="${row.id}" data-role="med" href="#">Medical Center</a>
+           <a class="dropdown-item" onclick="editRole(this)" data-id="${row.id}" data-role="sec" href="#">Security Personnel</a>
+<a class="dropdown-item" onclick="editRole(this)" data-id="${row.id}" data-role="ass" href="#">Assembly Man</a>
+        </div>
+    </div>
+</div>`
+              })
+            },
           {
             field: "Actions",
             title: "Actions",
@@ -178,7 +188,7 @@
                             </span>\
                         </a>\
   
-   <a href="/messages"  data-theme="dark" class="btn btn-sm btn-clean btn-icon can-delete" title="Chat with constituent">\
+   <a href="/messages"  data-theme="dark" class="btn btn-sm btn-clean btn-icon can-delete" data-toggle="tooltip"  title="Chat with constituent">\
                             <span class="svg-icon svg-icon-md">\
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -215,13 +225,14 @@
     leftArrow: '<i class="la la-angle-left"></i>',
     rightArrow: '<i class="la la-angle-right"></i>',
   };
-  function editContact(tthis) {
+  function editRole(tthis) {
     var edit_id = $(tthis).data("id");
+    var role = $(tthis).data('role');
 
     $.ajax({
-      url: "http://xtailor.eu-4.evennode.com/page",
+      url: `https://api.rennintech.com/mp-operations/switch-user-status/${user_details.system_id_for_user}/${edit_id}/${role}/`,
       type: "POST",
-      data: JSON.stringify({ edit_id: edit_id, callback: "contact/edit" }),
+      data: [],
       contentType: "application/json; charset=UTF-8",
       dataType: "json",
       cache: false,
@@ -235,61 +246,15 @@
       },
       success: function (data) {
         if (data.status === 200) {
-          $("#contactBody").html(data.message);
-          $("#editContact").modal("show");
-        } else {
           swal.fire({
-            text: "An error occurred and that is all we know",
-            icon: "error",
+            text: data.message,
+            icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Ok, got it!",
             customClass: {
               confirmButton: "btn font-weight-bold btn-light-primary",
             },
           });
-        }
-        KTApp.unblockPage();
-      },
-      error: function (error) {
-        console.error("an error occurred retry", error);
-        swal
-          .fire({
-            text: `Error ${error.message}`,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-              confirmButton: "btn font-weight-bold btn-light-danger",
-            },
-          })
-          .then(() => KTApp.unblockPage());
-      },
-    });
-  }
-  function deleteContact(tthis) {
-    var delete_id = $(tthis).data("id");
-
-    $.ajax({
-      url: "http://xtailor.eu-4.evennode.com/page",
-      type: "POST",
-      data: JSON.stringify({
-        delete_id: delete_id,
-        callback: "contact/delete",
-      }),
-      contentType: "application/json; charset=UTF-8",
-      dataType: "json",
-      cache: false,
-      processData: false,
-      beforeSend: function () {
-        KTApp.blockPage({
-          overlayColor: "#000000",
-          state: "primary",
-          message: "Please Wait...",
-        });
-      },
-      success: function (data) {
-        if (data.status === 200) {
-          $("#ajax_response").html(data.message);
         } else {
           swal.fire({
             text: "An error occurred and that is all we know",
