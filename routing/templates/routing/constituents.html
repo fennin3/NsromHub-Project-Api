@@ -160,9 +160,10 @@
         ${row.status}
         </button>
         <div class="dropdown-menu" aria-labelledby="statusBtn">
-            <a class="dropdown-item" onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="med" href="#">Medical Center</a>
-           <a class="dropdown-item" onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="sec" href="#">Security Personnel</a>
-<a class="dropdown-item" onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="ass" href="#">Assembly Man</a>
+            <a class="dropdown-item" ${row.status === 'Medical Center' ? 'hidden' :''} onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="med" href="#">Medical Center</a>
+           <a class="dropdown-item" ${row.status === 'Security Personnel' ? 'hidden' :''} onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="sec" href="#">Security Personnel</a>
+<a class="dropdown-item" ${row.status === 'Assembly Man' ? 'hidden' :''} onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="ass" href="#">Assembly Man</a>
+<a class="dropdown-item" ${row.status === 'Regular' ? 'hidden' :''} onclick="editRole(this)" data-id="${row.system_id_for_user}" data-role="regular" href="#">Regular</a>
         </div>
     </div>
 </div>`
