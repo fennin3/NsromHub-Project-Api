@@ -54,9 +54,6 @@ INSTALLED_APPS = [
     'chatsystem'
 ]
 
-SESSION_COOKIE_SECURE=True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

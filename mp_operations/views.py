@@ -1227,7 +1227,8 @@ class ChangeConstituencyStatus(APIView):
         dd = {
             "ass":"Assembly Man",
             "med":"Medical Center",
-            "sec":"Security Personnel"
+            "sec":"Security Personnel",
+            "regular":"Reguar"
         }
         try:
             mp = User.objects.get(system_id_for_user=mpid)
