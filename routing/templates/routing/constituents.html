@@ -254,7 +254,7 @@
             customClass: {
               confirmButton: "btn font-weight-bold btn-light-primary",
             },
-          });
+          }).then(()=>$("#cb_datatable").KTDatatable("reload"));
         } else {
           swal.fire({
             text: "An error occurred and that is all we know",
