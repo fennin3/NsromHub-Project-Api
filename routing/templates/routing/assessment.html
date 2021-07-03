@@ -39,8 +39,9 @@
   $.ajax({
     url: `https://api.rennintech.com/constituent-operations/retrive-projects-for-assessment/${user_details.system_id_for_user}/${year}/`,
     dataType: 'json',
+    method:"GET",
     beforeSend: function() {
-
+      
       KTApp.block('#ass_card', {
         overlayColor: 'blue',
         opacity: 0.1,
@@ -49,6 +50,7 @@
 
     },
     success: function (data) {
+      console.log("gggg",data)
       if (data.status === 200) {
         var ass_data = data.projects, cond_data = data.conducts;
           var ass_card = $("#assessment_card"), cond_card = $("#conduct_card");
