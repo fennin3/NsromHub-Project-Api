@@ -3,7 +3,7 @@ from django.db import models
 
 from django.db.models import fields
 from django.db.models.fields import files
-from users.models import Constituency, Region
+from users.models import Constituency, Region, UserPermissionCust
 from constituent_operations.models import Message, ProblemsForActionPlan, User, ConductsForAssessment
 from rest_framework import serializers
 from mp_operations.models import Comment, Project
@@ -126,3 +126,9 @@ class AssessmentSerializer(serializers.Serializer):
     conduct_assessment=serializers.DictField(
         child=serializers.CharField(max_length=100)
     )
+
+
+class PermSerializer(serializers.ModelField):
+    class Meta:
+        model=UserPermissionCust
+        exclude=['id']

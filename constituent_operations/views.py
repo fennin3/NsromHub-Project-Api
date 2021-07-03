@@ -2,10 +2,10 @@ import json
 from django.db.models import Q
 from django.core.files.base import ContentFile
 from mp_operations.serializers import UserSerializer
-from users.models import Constituency, Constituent
+from users.models import Constituency, Constituent, UserPermissionCust
 from mp_operations.serializers import CreateProjectSerializer
 from constituent_operations.serializers import ApproveActionPlanSerializer , \
-    CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
+    CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs, PermSerializer, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
     SendMessageSerializer, RNSendRequestFormSerializer, ConductForAssessmentSerializer, AssessmentSerializer
 
 
@@ -838,4 +838,19 @@ class SendAssessmentView(APIView):
 
             return Response(data, status=status.HTTP_200_OK)
 
+class GetPermissions(APIView):
+    permission_classes=()
 
+
+    def get(self, request, id):
+        user = User.objects.get(system_id_for_user=id)
+
+        perms = UserPermissionCust.objects.filter(user=user)
+
+        perms = PermSerializer(perms, many=True).data
+
+
+        return Response({
+            "status":status.HTTP_200_OK,
+            "data":perms
+        })
