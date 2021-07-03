@@ -592,7 +592,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     active_constituency=constituency,
                     active_town=town,
                     active_area=area,
-                    is_security_person =True
+                    is_security_person =True,
+                    status="Security Personnel"
                     )
 
                     user.set_password(request.data['password'])
@@ -636,7 +637,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     active_constituency=constituency,
                     active_town=town,
                     active_area=area,
-                    is_assembly_man =True
+                    is_assembly_man =True,
+                    status="Assembly Man"
                     )
 
 
@@ -681,7 +683,8 @@ class CreateUserAccountForOtherView(CreateAPIView):
                     active_constituency=constituency,
                     active_town=town,
                     active_area=area,
-                    is_medical_center =True
+                    is_medical_center =True,
+                    status = "Medical Center"
                     )
 
 
