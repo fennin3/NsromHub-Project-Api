@@ -131,4 +131,4 @@ class AssessmentSerializer(serializers.Serializer):
 class PermSerializer(serializers.ModelField):
     class Meta:
         model=UserPermissionCust
-        exclude=['id']
+        fields = "__all__"
