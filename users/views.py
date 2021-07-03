@@ -12,7 +12,8 @@ from . import serializers
 from rest_framework import status
 from rest_framework.response import Response
 from .serializers import countryCode
-
+from .models import RESTUUID
+import uuid
 
 User = get_user_model()
 
@@ -183,7 +184,21 @@ class MPCreateApiView(CreateAPIView):
             })
         
         else:
-        
+            try:
+                check_for_mp = User.objects.filter(active_constituency=constituency, is_mp=True)
+
+                if len(check_for_mp) > 0:
+                    return Response(
+                    {
+                        "status":status.HTTP_400_BAD_REQUEST,
+                        "message":"Constituency already has an MP"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                    )
+                else:
+                    pass
+            except Exception as e:
+                pass
         # Creating User and MP Profile
             user = User.objects.create(
             email=request.data['email'],
@@ -209,26 +224,28 @@ class MPCreateApiView(CreateAPIView):
                 user = user,
                 mp_id = request.data['mp_id'],  
             )
-
-            mp.save()
-            try:
-                const = Constituent.objects.get(user__system_id_for_user = id)
-                const.user.is_subadmin = True
-                const.user.subadmin_for = mp.user.active_constituency
-                const.subadmin_for = user
-                const.is_subadmin = True
-
-                const.save()
-            except Exception as e:
-                return Response({
-                    "status":status.HTTP_400_BAD_REQUEST,
-                    "message":"User is an MP"
-                })
+            if len(id) > 10:
+                try:
+                    const = Constituent.objects.get(user__system_id_for_user = id)
+                    const.user.is_subadmin = True
+                    const.user.subadmin_for = mp.user.active_constituency
+                    const.subadmin_for = user
+                    const.is_subadmin = True
+                    mp.save()
+                    const.save()
+                except Exception as e:
+                    return Response({
+                        "status":status.HTTP_400_BAD_REQUEST,
+                        "message":"User is an MP"
+                    })
+            else:
+                mp.save()
+                pass
 
             
             return Response({
                 "status":status.HTTP_201_CREATED,
-                "message":"Account registration is successful. We will get in touch to get your account verified.",
+                "message":"Account registration successful. Your account will be verified shortly.",
                 "email": user.email
                 }, status=status.HTTP_201_CREATED)
    
@@ -456,5 +473,85 @@ class GetOTPSMSView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class ForgotPasswordEmailVerify(APIView):
+    permission_classes = ()
 
-          
+    def post(self, request, email):
+        
+
+        try:
+
+            user = User.objects.get(email=email)
+            code = str(uuid.uuid1())
+
+            uuid_str = RESTUUID.objects.create(code=code)
+            uuid_str.save()
+            sending_mail(f"https://rennintech.com/reset-password?token={code}&eid={email}","Password Reset", email)
+
+            return Response({
+                "status":status.HTTP_200_OK,
+                "message":"Password reset instruction has been sent to your email address."
+            })
+
+
+
+        except Exception as e:
+            return Response({
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":f"No User with this email found. {e}",
+            })
+
+class SetPassword(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        email = request.data['email']
+        new_password = request.data['new_password']
+
+
+        try:
+
+            user = User.objects.get(email=email)
+
+            user.set_password(new_password)
+            user.save()
+
+
+            return Response(
+                {
+                    "status":status.HTTP_200_OK,
+                    "message":"Password reset successful"
+                }
+            )
+        
+        except Exception as e:
+            return Response(
+                {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                    "message":"Password reset unsuccessful"
+                }
+            )            
+
+
+
+
+class CheckCode(APIView):
+    permission_classes=()
+    
+    def get(self, request, uuid):
+        try:
+            code  = RESTUUID.objects.get(code=uuid)
+            code.delete()
+            return Response(
+                {
+                    "status":status.HTTP_200_OK,
+                    
+                }
+            )
+
+        except Exception as e:
+            return Response(
+                {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                }
+            )  

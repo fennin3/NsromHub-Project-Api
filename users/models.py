@@ -165,4 +165,13 @@ class UserPermissionCust(models.Model):
 
     def __str__(self):
         return self.permission_name
-    
+
+
+
+
+
+
+class RESTUUID(models.Model):
+    code = models.CharField(max_length=200)
+
+

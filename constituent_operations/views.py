@@ -102,15 +102,10 @@ class RetrieveProjectsView(APIView):
             projects = []
 
             try:
-                mp = User.objects.filter(active_constituency=user.active_constituency).first()
-                
-
+                mp = User.objects.filter(active_constituency=user.active_constituency, is_mp=True).first()
                 
                 for project in mp.projects.all():
-                    print("_______________")
-                    print(project)
                     projects.append(project)
-            
 
             except Exception as e:
                 print(e)

@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'routing',
     'superadmin_operations',
-    'chatsystem'
+    'chatsystem',
+    'django_createsuperuser'
 ]
 
 
@@ -141,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/London'
 
 USE_I18N = True
 
@@ -276,4 +277,4 @@ aws_secret = env('aws_secret')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-
+SESSION_COOKIE_SECURE = True

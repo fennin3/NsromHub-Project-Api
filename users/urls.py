@@ -17,7 +17,9 @@ urlpatterns = [
     path('get-phone-verification/', views.GetOTPSMSView.as_view(), name="verify_phone"),
     path('phone-verify/', views.OTPPhoneVerificationView.as_view(), name="verify_phone"),
 
-
+    path("send-reset-code/<email>/", views.ForgotPasswordEmailVerify.as_view(), name="aa"),
+    path("check-code/<uuid>/",views.CheckCode.as_view(), name="qaqq"),
+    path("password-reset", views.SetPassword.as_view(), name="yy2")
     # temp
 
 ]
