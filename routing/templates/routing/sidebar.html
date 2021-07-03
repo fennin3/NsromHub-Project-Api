@@ -237,7 +237,7 @@
     </a>
   </li>
   {% endif %}
-  {% if is_assemblyman and user.assembly_man_for == user.active_constituency.id %}
+  {% if is_assemblyman and user.assembly_man_for.id == user.active_constituency.id %}
   <li class="menu-item" aria-haspopup="true">
     <a href="action-assemblyman" class="menu-link">
       <i class="menu-icon flaticon2-console"></i>
