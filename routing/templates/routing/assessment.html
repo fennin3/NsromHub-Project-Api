@@ -54,34 +54,9 @@
       if (data.status === 200) {
         var ass_data = data.projects, cond_data = data.conducts;
           var ass_card = $("#assessment_card"), cond_card = $("#conduct_card");
-        if (ass_data.length > 0 && cond_data.length > 0) {
-
-          ass_card.html('');
-          cond_card.html('');
-          for (let d in ass_data) {
-            ass_card.append(`
-                  <div class="form-group row">
-            <label class="col-lg-3 col-form-label" for="___${ass_data[d].id}">${ass_data[d].name}: *</label>
-            <div class="col-lg-6">
-             <select
-             class="form-control form-control-solid selectpicker"
-             id="___${ass_data[d].id}"
-             name="${ass_data[d].id}"
-             required
-             >
-             <option disabled selected hidden >Select remarks</option>
-             <option>Excellent</option>
-             <option>Very Good</option>
-             <option>Good</option>
-             <option>Average</option>
-             <option>Poor</option>
-           </select>
-           <span class="form-text text-muted">Please select your remarks for this project</span>
-         </div>
-       </div>
-              `)
-          }
-          for (let c in cond_data) {
+          if (cond_data.length > 0){
+            cond_card.html('');
+             for (let c in cond_data) {
               cond_card.append(`
                <div class="form-group row">
             <label class="col-lg-3 col-form-label" for="___${cond_data[c].id}">${cond_data[c].title}: *</label>
@@ -105,14 +80,46 @@
               `);
                 $(".selectpicker").selectpicker();
             }
+          }
+          else{
+            cond_card.html(`  <div class="d-flex justify-content-between flex-column h-100">
+                <p>No conduct to assess. </p>
+              </div>`)
+          }
+        if (ass_data.length > 0) {
+
+          ass_card.html('');
+          
+          for (let d in ass_data) {
+            ass_card.append(`
+                  <div class="form-group row">
+            <label class="col-lg-3 col-form-label" for="___${ass_data[d].id}">${ass_data[d].name}: *</label>
+            <div class="col-lg-6">
+             <select
+             class="form-control form-control-solid selectpicker"
+             id="___${ass_data[d].id}"
+             name="${ass_data[d].id}"
+             required
+             >
+             <option disabled selected hidden >Select remarks</option>
+             <option>Excellent</option>
+             <option>Very Good</option>
+             <option>Good</option>
+             <option>Average</option>
+             <option>Poor</option>
+           </select>
+           <span class="form-text text-muted">Please select your remarks for this project</span>
+         </div>
+       </div>
+              `)
+          }
+         
 
         }else {
 ass_card.html(`  <div class="d-flex justify-content-between flex-column h-100">
                 <p>There are no projects to be assessed.</p>
               </div>`);
-cond_card.html(`  <div class="d-flex justify-content-between flex-column h-100">
-                <p>No conduct to assess. </p>
-              </div>`)
+
         }
         KTApp.unblock("#ass_card");
 
