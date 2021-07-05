@@ -164,6 +164,8 @@
     var sendBtn = KTUtil.getById("approve_status"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15",
       endpoint = `https://api.rennintech.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${year}/`;
+      console.log("titles", problem_titles)
+      console.log("stats", stats)
 
     $.ajax({
       url: endpoint,
