@@ -128,7 +128,7 @@ class AssessmentSerializer(serializers.Serializer):
     )
 
 
-class PermSerializer(serializers.ModelField):
+class PermSerializer2(serializers.ModelSerializer):
     class Meta:
         model=UserPermissionCust
         fields = "__all__"

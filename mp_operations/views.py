@@ -382,7 +382,7 @@ class RetrieveActionPlanSummaryEachAreaForMPView(APIView):
         user = User.objects.get(system_id_for_user=id)
 
 
-        action_plans = ActionPlanAreaSummaryForMp.objects.filter(date__year=date, area=user.active_area, constituency=user.active_constituency)
+        action_plans = ActionPlanAreaSummaryForMp.objects.filter(date__year=date, constituency=user.active_constituency)
 
         print(action_plans)
 
@@ -391,6 +391,7 @@ class RetrieveActionPlanSummaryEachAreaForMPView(APIView):
         
 
         data = {
+                "this":"hello",
             "status":status.HTTP_200_OK,
             "data":data.data
         }

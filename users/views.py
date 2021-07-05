@@ -301,6 +301,12 @@ class UserLoginView(APIView):
         if user_.email_verified:
             return Response(response, status=status_code)
         else:
+            if (user_.is_mp):
+                otp_code = generate_OTP()
+
+                otp = OTPCode.objects.create(code_for=request.data['email'],code=otp_code)
+                otp.save()
+                sending_mail(f"Hello {request.data['full_name']}\nThis is your verification code: {otp_code}","NsromaHub Account email verification", request.data['email'])
             return Response(
                 {
                     "status":status.HTTP_400_BAD_REQUEST,

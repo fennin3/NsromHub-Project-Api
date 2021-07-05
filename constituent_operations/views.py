@@ -5,7 +5,7 @@ from mp_operations.serializers import UserSerializer
 from users.models import Constituency, Constituent, UserPermissionCust
 from mp_operations.serializers import CreateProjectSerializer
 from constituent_operations.serializers import ApproveActionPlanSerializer , \
-    CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs, PermSerializer, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
+    CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs,PermSerializer2, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
     SendMessageSerializer, RNSendRequestFormSerializer, ConductForAssessmentSerializer, AssessmentSerializer
 
 
@@ -626,13 +626,62 @@ class GetActionPlanApprovedStatusView(APIView):
 
             approved.save()
 
-            return Response(
-                {
-                    "status":status.HTTP_200_OK,
-                    "message":"Action Plan has been Approved."
-                }
-            )
+            data = ApproveActionPlanSerializer(data = request.data)
+            data.is_valid(raise_exception=True)
 
+            x = data['problem_titles'].value
+            y = data['stats'].value
+
+            # def addlabels(x,y):
+            #     for i in range(len(x)):
+            #     plt.text(i,y[i],y[i])
+
+            def addlabels(x,y):
+                for i in range(len(x)):
+                    plt.text(i,y[i], y[i])  
+            
+
+            try:
+
+                app_ = ApprovedActionPlan.objects.create(year=year, user=user)
+
+                app_.save()
+                figure = BytesIO()
+            
+                plt.bar(x, y)
+                addlabels(x,y)
+                plt.savefig(figure)
+                
+    
+                content_file = ContentFile(figure.getvalue())
+
+
+                ap = ActionPlanAreaSummaryForMp.objects.create(
+                    constituency = user.active_constituency,
+                    area = user.active_area,
+                    comment = data['comment'].value
+                )
+
+                ap.image.save("stats_image.jpg", content_file)
+
+                ap.save()
+
+                data = {
+                    "status":status.HTTP_200_OK,
+                    "message":f"Action plan summary of {user.active_area.name} has been approved."
+                }
+
+
+                return Response(data,status=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                data = {
+                    "status":status.HTTP_400_BAD_REQUEST,
+                    "message":f"Action plan summary of {user.active_area.name} was not approved, try again."
+                }
+
+                return Response(data, status.HTTP_400_BAD_REQUEST)
+                
     def get(self, request, id, year):
         user = User.objects.get(system_id_for_user=id)
 
@@ -845,12 +894,13 @@ class GetPermissions(APIView):
     def get(self, request, id):
         user = User.objects.get(system_id_for_user=id)
 
-        perms = UserPermissionCust.objects.filter(user=user)
+        perms_ = UserPermissionCust.objects.filter(user=user)
 
-        perms = PermSerializer(perms, many=True).data
+        perms = PermSerializer2(perms_,many=True).data
 
 
         return Response({
             "status":status.HTTP_200_OK,
-            "data":perms
+            "data":perms,
+            "len":user.system_id_for_user
         })
