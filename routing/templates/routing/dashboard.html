@@ -83,13 +83,21 @@
       </div>
       <!--end::Top-->
       <!--begin::Form-->
-      <div class="summernote mt-3" id="mp_post_message">
-      </div>
-      <div class="mt-3" onclick="sendPost(this)">
-       <button class="btn btn-primary btn-sm btn-hover-primary">
+      <form method="post" id="postForm">
+        <div class="form-group">
+      <textarea class="form-control form-control-solid mt-3" rows="4" required name="caption" id="mp_post_message">
+      </textarea>
+    </div>
+     <div class="form-group">
+      <input class="form-control form-control-solid mt-3" type="file" name="media" id="media" />
+    </div>
+
+      <div class="mt-3">
+       <button type="submit" class="btn btn-primary btn-sm btn-hover-primary">
         Post <i class="flaticon2-paperplane icon-ms"></i>
        </button>
     </div>
+  </form>
 
     <!--end::Form-->
   </div>
@@ -363,7 +371,6 @@ var fetchData = () => {
     url: endpoint,
     method: "GET",
     beforeSend: function () {
-      console.log("edn", endpoint);
       KTApp.block("#mp_feed", {
         overlayColor: "red",
         opacity: 0.1,
@@ -871,34 +878,22 @@ var toggleShow = ($this) => {
       },
     });
   };
-  var sendPost = ($this) => {
-    var caption = $(".summernote").summernote('code');
+  $("#postForm").on("submit", function(e){
+    e.preventDefault();
 
-    if (caption === "") {
-      swal.fire({
-        text: `Post body can not be empty`,
-        icon: "error",
-        buttonsStyling: false,
-        confirmButtonText: "Ok, got it!",
-        customClass: {
-          confirmButton: "btn font-weight-bold btn-light-danger",
-        },
-      });
-    }
-    var endpoint = `https://api.rennintech.com/mp-operations/create-post/`;
-    $.ajax({
-      url: endpoint,
+    let formData = new FormData(document.getElementById("postForm"));
+    formData.append('user_id',user_details.system_id_for_user);
+
+      $.ajax({
+      url: 'https://api.rennintech.com/mp-operations/create-post/',
       method: "POST",
-      data: {
-        user_id: user_details.system_id_for_user,
-        caption,
-        media:null,
-      },
+      data: formData,
+      contentType: false,
       cache: false,
-      processData: true,
+      processData: false,
       dataType: "json",
       beforeSend: function () {
-        KTApp.blockPage({
+         KTApp.blockPage({
           overlayColor: "#000000",
           state: "primary",
           message: "Sending Post...",
@@ -931,9 +926,10 @@ var toggleShow = ($this) => {
           });
         }
         KTApp.unblockPage();
+
       },
       error: function (error) {
-        console.log("error", error);
+       console.log("error", error);
         swal.fire({
           text: `An error occurred and that is all we know`,
           icon: "error",
@@ -946,7 +942,8 @@ var toggleShow = ($this) => {
         KTApp.unblockPage();
       },
     });
-  };
+  });
+
 
   var sendLike = ($this) => {
     var like = $($this);
