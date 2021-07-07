@@ -123,9 +123,9 @@
 
           $.get(
             `https://api.rennintech.com/constituent-operations/approval-status/${user_details.system_id_for_user}/${date}/`,
-            function (data) {
+            function (response) {
 
-              if (data.status === true) {
+              if (response.status === true) {
                 $(".approve_status")
                   .text("Approved")
                   .removeClass("btn-primary")
@@ -191,7 +191,7 @@
               buttonsStyling: false,
               confirmButtonText: "Ok, got it!",
               customClass: {
-                confirmButton: "btn font-weight-bold btn-light-danger",
+                confirmButton: "btn font-weight-bold btn-light-success",
               },
             })
             .then(() => {
