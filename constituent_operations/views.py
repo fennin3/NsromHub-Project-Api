@@ -626,11 +626,11 @@ class GetActionPlanApprovedStatusView(APIView):
 
             approved.save()
 
-            data = ApproveActionPlanSerializer(data = request.data)
-            data.is_valid(raise_exception=True)
+            #data = ApproveActionPlanSerializer(data = request.data)
+            #data.is_valid(raise_exception=True)
 
-            x = data['problem_titles'].value
-            y = data['stats'].value
+            x = request.data['problem_titles'].value
+            y = request.data['stats'].value
 
             # def addlabels(x,y):
             #     for i in range(len(x)):
@@ -659,7 +659,7 @@ class GetActionPlanApprovedStatusView(APIView):
                 ap = ActionPlanAreaSummaryForMp.objects.create(
                     constituency = user.active_constituency,
                     area = user.active_area,
-                    comment = data['comment'].value
+                    comment = request.data['comment']
                 )
 
                 ap.image.save("stats_image.jpg", content_file)
