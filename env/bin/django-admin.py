@@ -1,4 +1,4 @@
-#!/home/sapauser/sapa/env/bin/python
+#!/Users/francisennin/Desktop/Projects/apis/NsromHub-Project-Api/env/bin/python
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'routing',
     'superadmin_operations',
     'chatsystem',
-    'django_createsuperuser'
 ]
 
 

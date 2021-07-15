@@ -21,8 +21,8 @@ class ConstituentCreateApiView(CreateAPIView):
     queryset=User.objects.all()
     serializer_class = ConstituentRegisterSerializer
     permission_classes=()
-
-    def create(self, request):
+    def post(self, request):
+        print("******************************!!!!!!!")
         country = get_object_or_404(Country, id=request.data['country'])
         region = get_object_or_404(Region, id=request.data['region'])
         constituency = get_object_or_404(Constituency, id=request.data['constituency'])
@@ -43,7 +43,8 @@ class ConstituentCreateApiView(CreateAPIView):
             else:
                 system_id_for_user = system_id_for_user
                 break
-
+        
+        
         
         email = request.data['email']
         contact = request.data['contact']
@@ -89,7 +90,9 @@ class ConstituentCreateApiView(CreateAPIView):
                 is_constituent = True,
                 system_id_for_user=system_id_for_user,
                 is_active=False,
-                active_constituency=constituency
+                active_constituency=constituency,
+                active_town = town,
+                active_area = area
                 )
 
                 user.set_password(request.data['password'])

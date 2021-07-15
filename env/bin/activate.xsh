@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/home/sapauser/sapa/env"
+$VIRTUAL_ENV = r"/Users/francisennin/Desktop/Projects/apis/NsromHub-Project-Api/env"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

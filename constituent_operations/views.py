@@ -1,4 +1,5 @@
 import json
+import _thread
 from django.db.models import Q
 from django.core.files.base import ContentFile
 from mp_operations.serializers import UserSerializer
@@ -10,6 +11,7 @@ from constituent_operations.serializers import ApproveActionPlanSerializer , \
 
 
 from rest_framework.response import Response
+import matplotlib
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -512,12 +514,34 @@ class ApproveActionPlanView(APIView):
         data = ApproveActionPlanSerializer(data = request.data)
         data.is_valid(raise_exception=True)
 
+
+        try:
+            approved = ApprovedActionPlan.objects.filter(user__system_id_for_user=id, year=year)
+            if len(approved)>0:
+                
+                return Response(
+                    {
+                        "status":status.HTTP_400_BAD_REQUEST,
+                        "message":"Action Plan has already been Approved."
+                    }
+                )
+
+        except Exception as e:
+           
+            approved = ApprovedActionPlan.objects.create(
+                user = user,
+                year = year
+            )
+
+            approved.save()
+
         x = data['problem_titles'].value
         y = data['stats'].value
 
         # def addlabels(x,y):
         #     for i in range(len(x)):
         #     plt.text(i,y[i],y[i])
+        matplotlib.use("Agg")
 
         def addlabels(x,y):
             for i in range(len(x)):
@@ -531,10 +555,16 @@ class ApproveActionPlanView(APIView):
 
             app_.save()
             figure = BytesIO()
+            def _run ():
+                plt.bar(x, y)
+                addlabels(x,y)
+                plt.savefig(figure)
+
+            _run()
+            # thre = threading.Thread(_run,args=())
+            # thre.start()
+
             
-            plt.bar(x, y)
-            addlabels(x,y)
-            plt.savefig(figure)
             
 
             content_file = ContentFile(figure.getvalue())
