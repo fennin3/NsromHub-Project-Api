@@ -31,7 +31,7 @@ DEVELOPMENT_MODE = True
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["198.199.73.102","localhost", "127.0.0.1", 'api.rennintech.com']
+ALLOWED_HOSTS = ["198.199.73.102","localhost", "127.0.0.1", 'api.rennintech.com', "nsrohub.herokuapp.com"]
 
 
 # Application definition
