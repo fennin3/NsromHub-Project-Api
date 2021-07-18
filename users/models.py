@@ -63,7 +63,6 @@ class Area(models.Model):
     
 
 class CustomUser(AbstractUser):
-    username = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(unique=True)
     USERNAME_FIELD = 'email'
     is_mp = models.BooleanField(default=False)
