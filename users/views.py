@@ -309,7 +309,7 @@ class UserLoginView(APIView):
 
                 otp = OTPCode.objects.create(code_for=user_.email,code=otp_code)
                 otp.save()
-                sending_mail(f"Hello {request.data['full_name']}\nThis is your verification code: {otp_code}","NsromaHub Account email verification", request.data['email'])
+                sending_mail(f"Hello {user_.full_name}\nThis is your verification code: {otp_code}","NsromaHub Account email verification", user_.email)
             return Response(
                 {
                     "status":status.HTTP_400_BAD_REQUEST,
