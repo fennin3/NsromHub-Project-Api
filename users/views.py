@@ -307,7 +307,7 @@ class UserLoginView(APIView):
             if (user_.is_mp):
                 otp_code = generate_OTP()
 
-                otp = OTPCode.objects.create(code_for=request.data['email'],code=otp_code)
+                otp = OTPCode.objects.create(code_for=user_.email,code=otp_code)
                 otp.save()
                 sending_mail(f"Hello {request.data['full_name']}\nThis is your verification code: {otp_code}","NsromaHub Account email verification", request.data['email'])
             return Response(
