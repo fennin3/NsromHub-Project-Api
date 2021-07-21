@@ -267,7 +267,7 @@ aws_secret = env('aws_secret')
 
 
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 
 # STATIC_URL = "/static/"
