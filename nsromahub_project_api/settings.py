@@ -98,24 +98,24 @@ WSGI_APPLICATION = 'nsromahub_project_api.wsgi.application'
 #     }
 # }
 
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-        }
+# if DEBUG:
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'sapadb',
-            'USER': 'sapauserdb',
-            'PASSWORD': 'P@ssw0rd1998',
-            'HOST': 'localhost',
-            'PORT': '',
-        }
-    }
+}
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'sapadb',
+#             'USER': 'sapauserdb',
+#             'PASSWORD': 'P@ssw0rd1998',
+#             'HOST': 'localhost',
+#             'PORT': '',
+#         }
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -267,7 +267,7 @@ aws_secret = env('aws_secret')
 
 
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
 
 
 # STATIC_URL = "/static/"
