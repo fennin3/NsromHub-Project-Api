@@ -3,10 +3,7 @@
 from datetime import timedelta
 from pathlib import Path
 import os
-import sys
-import dj_database_url
 import django_heroku
-from django.core.management.utils import get_random_secret_key
 
 
 import environ
@@ -255,12 +252,12 @@ aws_access = env('aws_access')
 aws_secret = env('aws_secret')
 
 
-# AWS_ACCESS_KEY_ID = aws_access
-# AWS_SECRET_ACCESS_KEY = aws_secret
-# AWS_STORAGE_BUCKET_NAME = 'sapa-bucket'
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = aws_access
+AWS_SECRET_ACCESS_KEY = aws_secret
+AWS_STORAGE_BUCKET_NAME = 'sapa-bucket'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 
