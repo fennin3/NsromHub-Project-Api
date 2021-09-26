@@ -44,7 +44,7 @@
     var apexChart = "#ov_action_sum";
 
     $.get(
-      `https://api.rennintech.com/mp-operations/action-plan-overall-summary/${user_details.system_id_for_user}/${date}/`,
+      `https://api.omanbapa.com/mp-operations/action-plan-overall-summary/${user_details.system_id_for_user}/${date}/`,
       function (data) {
 
         if (data.status === 200) {
@@ -96,7 +96,7 @@
   showChart(current_date.getFullYear());
 
   $.get(
-    "https://api.rennintech.com/constituent-operations/retrieve-years/",
+    "https://api.omanbapa.com/constituent-operations/retrieve-years/",
     function (data) {
       console.log("datayears", data);
       if (data.status === 200) {

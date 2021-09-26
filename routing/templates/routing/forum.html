@@ -176,7 +176,7 @@ jQuery(document).ready(function() {
 
 
     var message_box = $('.forum-messages');
-    $.get(`https://api.rennintech.com/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
+    $.get(`https://api.omanbapa.com/general/retrieve-forum-messages/${user_details.system_id_for_user}/`, function(data) {
         console.log('forum msg', data.data);
         if (data.status === 200) {
             KTApp.unblock("#chart_card");
@@ -259,7 +259,7 @@ $("#forum-message-send").on("click", function (e) {
   $("#forum_body_send").val("");
 
       $.ajax({
-                    url: `https://api.rennintech.com/general/send-message-to-forum/`,
+                    url: `https://api.omanbapa.com/general/send-message-to-forum/`,
                     type: "POST",
                     dataType: "json",
                     data:{sender:user_details.system_id_for_user,message:message_body},

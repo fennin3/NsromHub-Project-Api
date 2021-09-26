@@ -170,7 +170,7 @@
         placeholder:'Select Area',
       });
 $.ajax({
-        url: 'https://api.rennintech.com/users/all-countries/',
+        url: 'https://api.omanbapa.com/users/all-countries/',
         dataType: 'json',
         success: function (data) {
 
@@ -410,7 +410,7 @@ regions.on('change',function (e){
 
               if (status == 'Valid') {
                    var ac_type = $("#type").val().toLowerCase();
-                  var endpoint = `https://api.rennintech.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/${ac_type}/`;
+                  var endpoint = `https://api.omanbapa.com/mp-operations/create-account-for-others/${user_details.system_id_for_user}/${ac_type}/`;
                  
                 var $this = $('#add_account_form'),  signUpBtn = KTUtil.getById('add_account'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
                 $.ajax({

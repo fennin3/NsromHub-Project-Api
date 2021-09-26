@@ -224,7 +224,7 @@ aria-hidden="true"
 
 
 $.get(
-  "https://api.rennintech.com/general/get-actionplan-status/",
+  "https://api.omanbapa.com/general/get-actionplan-status/",
   function (data) {
     if (data.status === 200) {
       if (data.action_plan_status === true) {
@@ -238,7 +238,7 @@ $.get(
 
 var fetchActions = () => {
   $.get(
-    "https://api.rennintech.com/constituent-operations/action-titles/",
+    "https://api.omanbapa.com/constituent-operations/action-titles/",
     function (data) {
       if (data.status === 200) {
         var actions = data.data;
@@ -292,7 +292,7 @@ $("#send_action_data").on("click", function (e) {
   var actionBtn = KTUtil.getById("send_action_data"),
   _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
-  var endp = `https://api.rennintech.com/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
+  var endp = `https://api.omanbapa.com/constituent-operations/send-action-plan/${user_details.system_id_for_user}/`;
 
   var _one = $("#one").val(), _two = $("#two").val(), _three = $("#three").val();
   var d_send = {
@@ -365,7 +365,7 @@ $("#send_action_data").on("click", function (e) {
 });
 
 var fetchData = () => {
-  var endpoint = `https://api.rennintech.com/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
+  var endpoint = `https://api.omanbapa.com/constituent-operations/retrieve-projects/${user_details.system_id_for_user}/`;
 
   $.ajax({
     url: endpoint,
@@ -397,7 +397,7 @@ var fetchData = () => {
               <div class="card-body">
               <div class="d-flex align-items-center">
               <div class="symbol symbol-40 symbol-light-success mr-5">
-              <div class="symbol-label" style="background-image: url(https://api.rennintech.com${feeds[feed].mp.profile_picture})">
+              <div class="symbol-label" style="background-image: url(https://api.omanbapa.com${feeds[feed].mp.profile_picture})">
               </div></div>
 <div class="d-flex flex-column flex-grow-1">
               <a href="#" class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">${
@@ -409,7 +409,7 @@ var fetchData = () => {
               </div></div><div class="pt-4">${
                 feeds[feed].media === null
                 ? ""
-                : `<div class="bgi-no-repeat bgi-size-contain rounded min-h-265px" style="background-position: center;background-image: url(https://api.rennintech.com${feeds[feed].media})"></div>`
+                : `<div class="bgi-no-repeat bgi-size-contain rounded min-h-265px" style="background-position: center;background-image: url(https://api.omanbapa.com${feeds[feed].media})"></div>`
               }
               <div class="d-flex text-dark-75 font-size-lg font-weight-normal pt-5 mb-2">${
                 feeds[feed].description
@@ -507,7 +507,7 @@ var toggleShow = ($this) => {
     var const_id = $($this).data("id");
     var const__name = $($this).data("name");
 
-    var endpoint = `https://api.rennintech.com/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
+    var endpoint = `https://api.omanbapa.com/constituent-operations/switch-active-constituency/${user_details.system_id_for_user}/${const_id}/`;
 
     $.ajax({
       url: endpoint,
@@ -739,7 +739,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `https://api.rennintech.com/users/create-secondary-account/`;
+    var endpoint = `https://api.omanbapa.com/users/create-secondary-account/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -815,7 +815,7 @@ var toggleShow = ($this) => {
         },
       });
     }
-    var endpoint = `https://api.rennintech.com/constituent-operations/comment-on-post/`;
+    var endpoint = `https://api.omanbapa.com/constituent-operations/comment-on-post/`;
     $.ajax({
       url: endpoint,
       method: "PUT",
@@ -885,7 +885,7 @@ var toggleShow = ($this) => {
     formData.append('user_id',user_details.system_id_for_user);
 
       $.ajax({
-      url: 'https://api.rennintech.com/mp-operations/create-post/',
+      url: 'https://api.omanbapa.com/mp-operations/create-post/',
       method: "POST",
       data: formData,
       contentType: false,
@@ -948,7 +948,7 @@ var toggleShow = ($this) => {
   var sendLike = ($this) => {
     var like = $($this);
     var project_id = $($this).data("id");
-    var endpoint = `https://api.rennintech.com/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
+    var endpoint = `https://api.omanbapa.com/constituent-operations/like-project/${user_details.system_id_for_user}/${project_id}/`;
 
     var curVal = like.find("span.like_num").text();
 
@@ -995,7 +995,7 @@ var toggleShow = ($this) => {
   var loadPostContainer = () => {
     $(".user_image").css(
       "background-image",
-      `url(https://api.rennintech.com${user_details.profile_picture})`
+      `url(https://api.omanbapa.com${user_details.profile_picture})`
       );
     $('.user_name').text(user_details.full_name);
     $('.summernote').summernote({

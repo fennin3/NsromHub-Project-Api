@@ -95,7 +95,7 @@
         // datasource definition
         data: {
           type: "remote",
-          source: `https://api.rennintech.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
+          source: `https://api.omanbapa.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
           pageSize: 10,
         },
         layout: {
@@ -121,7 +121,7 @@
                 '<div class="d-flex align-items-center">\
                         <div class="symbol symbol-50 symbol-sm flex-shrink-0">\
                             <div class="symbol-label">\
-                                <img class="h-75 align-self-end" src="https://api.rennintech.com' +
+                                <img class="h-75 align-self-end" src="https://api.omanbapa.com' +
                 row.profile_picture +
                 '" alt="' +
                 row.full_name +
@@ -231,7 +231,7 @@
     var role = $(tthis).data('role');
 
     $.ajax({
-      url: `https://api.rennintech.com/mp-operations/switch-user-status/${user_details.system_id_for_user}/${edit_id}/${role}/`,
+      url: `https://api.omanbapa.com/mp-operations/switch-user-status/${user_details.system_id_for_user}/${edit_id}/${role}/`,
       type: "POST",
       data: [],
       contentType: "application/json; charset=UTF-8",

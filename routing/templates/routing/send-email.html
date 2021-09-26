@@ -133,7 +133,7 @@
   });
 
   $.ajax({
-    url: `https://api.rennintech.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
+    url: `https://api.omanbapa.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`,
     method: "POST",
     data: [],
     cache: false,
@@ -165,7 +165,7 @@
   });
 
   $.ajax({
-    url: `https://api.rennintech.com/mp-operations/get-areas-for-mp/${user_details.system_id_for_user}/`,
+    url: `https://api.omanbapa.com/mp-operations/get-areas-for-mp/${user_details.system_id_for_user}/`,
     method: "GET",
     data: [],
     cache: false,
@@ -203,11 +203,11 @@
     var sendBtn = KTUtil.getById("compose_send"),
       _buttonSpinner = "spinner spinner-right spinner-white pr-15";
 
-    var endp = `https://api.rennintech.com/mp-operations/mp-send-emails/`;
+    var endp = `https://api.omanbapa.com/mp-operations/mp-send-emails/`;
     if ($("#category") === "individual") {
-      endp = `https://api.rennintech.com/mp-operations/mp-send-email/`;
+      endp = `https://api.omanbapa.com/mp-operations/mp-send-email/`;
     } else if($("#category") === "area") {
-        endp = `https://api.rennintech.com/mp-operations/send-email-to-area/${area_id}/`;
+        endp = `https://api.omanbapa.com/mp-operations/send-email-to-area/${area_id}/`;
     }
     var formData = new FormData(document.getElementById("compose_form"));
     $.ajax({

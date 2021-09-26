@@ -201,7 +201,7 @@ jQuery(document).ready(function() {
 	KTAppChat.init();
 });
 
-$.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`, function (data) {
+$.post(`https://api.omanbapa.com/mp-operations/list-mp-constituent/${user_details.system_id_for_user}/`, function (data) {
 
     var const_chats = $("#constituents-chat");
     if(data.data.length > 0 ) {
@@ -213,7 +213,7 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
                 <div style="cursor: pointer" data-name="${d.full_name}" onclick="fetchChat('${d.system_id_for_user}','${d.full_name}')" class="d-flex align-items-center justify-content-between mb-5">
 <div class="d-flex align-items-center">
 <div class="symbol symbol-circle symbol-50 mr-3">
-<img alt="${d.full_name}" src="https://api.rennintech.com${d.profile_picture}" />
+<img alt="${d.full_name}" src="https://api.omanbapa.com${d.profile_picture}" />
 </div>
 <div class="d-flex flex-column">
 <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-lg">${d.full_name}</a>
@@ -240,7 +240,7 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
     });
 
        $.ajax({
-                    url: `https://api.rennintech.com/general/set-unread-messages-to-read/${userId}/${user_details.system_id_for_user}/`,
+                    url: `https://api.omanbapa.com/general/set-unread-messages-to-read/${userId}/${user_details.system_id_for_user}/`,
                     type: "POST",
                     dataType: "json",
                     cache: false,
@@ -266,7 +266,7 @@ $.post(`https://api.rennintech.com/mp-operations/list-mp-constituent/${user_deta
     $("#receiver_id").val(userId);
 
     var message_box = $('.messages');
-    $.get(`https://api.rennintech.com/mp-operations/retrieve-messages/${user_details.system_id_for_user}/${userId}/`, function(data) {
+    $.get(`https://api.omanbapa.com/mp-operations/retrieve-messages/${user_details.system_id_for_user}/${userId}/`, function(data) {
 
         if (data.status === 200) {
             KTApp.unblock("#chart_card");
@@ -353,7 +353,7 @@ $("#mp-message-send").on("click", function (e) {
   $("#mp_body_send").val("");
 
       $.ajax({
-                    url: `https://api.rennintech.com/chatsystem/send-message/`,
+                    url: `https://api.omanbapa.com/chatsystem/send-message/`,
                     type: "POST",
                     data:{sender:user_details.system_id_for_user,receiver,message:message_body},
                     dataType: "json",

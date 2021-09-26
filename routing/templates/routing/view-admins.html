@@ -93,7 +93,7 @@
         // datasource definition
         data: {
           type: "remote",
-          source: `https://api.rennintech.com/mp-operations/retrieve-all-subadmins/${user_details.system_id_for_user}/`,
+          source: `https://api.omanbapa.com/mp-operations/retrieve-all-subadmins/${user_details.system_id_for_user}/`,
           pageSize: 10,
         },
         layout: {
@@ -128,7 +128,7 @@
                 '<div class="d-flex align-items-center">\
                         <div class="symbol symbol-50 symbol-sm flex-shrink-0">\
                             <div class="symbol-label">\
-                                <img class="h-75 align-self-end" src="https://api.rennintech.com' +
+                                <img class="h-75 align-self-end" src="https://api.omanbapa.com' +
                 row.user.profile_picture +
                 '" alt="' +
                 row.user.full_name +
@@ -236,7 +236,7 @@
     var edit_id = $(tthis).data("id");
 
     $.ajax({
-      url: `https://api.rennintech.com/pages/pageviews/${edit_id}/`,
+      url: `https://api.omanbapa.com/pages/pageviews/${edit_id}/`,
       type: "POST",
       data: JSON.stringify({ page_name: "get_permissions" }),
       contentType: "application/json; charset=UTF-8",
@@ -286,7 +286,7 @@
     }).then(function (result) {
       if (result.value) {
         $.ajax({
-          url: `https://api.rennintech.com/mp-operations/mp-unmake-subadmin/${user_details.system_id_for_user}/${delete_id}/`,
+          url: `https://api.omanbapa.com/mp-operations/mp-unmake-subadmin/${user_details.system_id_for_user}/${delete_id}/`,
           type: "POST",
           dataType: "json",
           cache: false,

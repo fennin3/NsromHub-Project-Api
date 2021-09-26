@@ -51,7 +51,7 @@ $("form#incident_form").on('submit',function(e){
 
 var  sendBtn =  KTUtil.getById('incident_send'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
 
-    var endp = `https://api.rennintech.com/constituent-operations/send-incident-report/`;
+    var endp = `https://api.omanbapa.com/constituent-operations/send-incident-report/`;
     var formData =  new FormData(document.getElementById('incident_form'));
                 $.ajax({
                     url:endp,

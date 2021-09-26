@@ -37,7 +37,7 @@
   var current_date = new Date();
  var year = current_date.getFullYear();
   $.ajax({
-    url: `https://api.rennintech.com/constituent-operations/retrive-projects-for-assessment/${user_details.system_id_for_user}/${year}/`,
+    url: `https://api.omanbapa.com/constituent-operations/retrive-projects-for-assessment/${user_details.system_id_for_user}/${year}/`,
     dataType: 'json',
     beforeSend: function() {
 
@@ -162,7 +162,7 @@ function getFormData($form){
           "projects_assessment" : a_data,
           "conduct_assessment": c_data
       }
-       var endpoint = `https://api.rennintech.com/constituent-operations/send-assessment/${user_details.system_id_for_user}/`;
+       var endpoint = `https://api.omanbapa.com/constituent-operations/send-assessment/${user_details.system_id_for_user}/`;
 
        var assBtn = KTUtil.getById('add_assessment'), _buttonSpinner= 'spinner spinner-right spinner-white pr-15';
        $.ajax({
