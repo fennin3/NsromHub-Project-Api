@@ -135,7 +135,7 @@ class ConstituentCreateApiView(CreateAPIView):
 
                 return Response({
                     "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    "ERROR":"f{e}",
+                    "ERROR":f'{e}',
                     "message":"Something went wrong, check your internet connection and try again.",
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
