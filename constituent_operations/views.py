@@ -633,7 +633,7 @@ class GetActionPlanApprovedStatusView(APIView):
     permission_classes=()
 
     def post(self, request, id, year):
-        
+        print(request.data)
         user = User.objects.get(system_id_for_user=id)
       
         try:
