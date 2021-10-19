@@ -638,9 +638,11 @@ class GetActionPlanApprovedStatusView(APIView):
     permission_classes=()
 
     def post(self, request, id, year):
+        
         user = User.objects.get(system_id_for_user=id)
+      
         try:
-            approved = ApprovedActionPlan.objects.get(system_id_for_user=id, year=year)
+            approved = ApprovedActionPlan.objects.get(user=user, year=year)
             return Response(
                 {
                     "status":status.HTTP_400_BAD_REQUEST,
@@ -659,8 +661,8 @@ class GetActionPlanApprovedStatusView(APIView):
             #data = ApproveActionPlanSerializer(data = request.data)
             #data.is_valid(raise_exception=True)
 
-            x = request.data['problem_titles'].value
-            y = request.data['stats'].value
+            x = request.data['problem_titles']
+            y = request.data['stats']
 
             # def addlabels(x,y):
             #     for i in range(len(x)):
@@ -672,7 +674,6 @@ class GetActionPlanApprovedStatusView(APIView):
             
 
             try:
-
                 app_ = ApprovedActionPlan.objects.create(year=year, user=user)
 
                 app_.save()
