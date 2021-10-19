@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-6^4ca9$ml4l1c#36gkc*z3#8(h_(9efte_*(03byw4real%7rl
 # DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["198.199.73.102","localhost", "127.0.0.1", 'api.rennintech.com', "nsrohub.herokuapp.com", "143.244.153.209"]
+ALLOWED_HOSTS = ["198.199.73.102","localhost", "127.0.0.1", 'api.omanbapa.com', "nsrohub.herokuapp.com"]
 
 
 # Application definition
