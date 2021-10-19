@@ -1,28 +1,23 @@
 import json
 import _thread
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.core.files.base import ContentFile
-from mp_operations.serializers import UserSerializer
 from users.models import Constituency, Constituent, UserPermissionCust
-from mp_operations.serializers import CreateProjectSerializer
 from constituent_operations.serializers import ApproveActionPlanSerializer , \
     CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs,PermSerializer2, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
     SendMessageSerializer, RNSendRequestFormSerializer, ConductForAssessmentSerializer, AssessmentSerializer
 
-
 from rest_framework.response import Response
-import matplotlib
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from mp_operations.models import ActionPlanAreaSummaryForMp, Comment, Project
 from datetime import datetime
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import os
 from .models import RequestForm, ActionPlanToAssemblyMan, IncidentReport, Message, ProblemsForActionPlan, ApprovedActionPlan, ActionPlanParticipants, Assessment, AssessmentParticipant, ConductAssessment, ConductsForAssessment
 from io import BytesIO
-from django.db.models import  Sum
-from django.db.models import  Q
 
 
 
