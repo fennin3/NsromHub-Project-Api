@@ -63,8 +63,7 @@ class SendMessageConstituentView(APIView):
                             mp=member
                             break
             receiver = mp
-            print(f"MP----{mp}")
-            print(f"MP----{receiver}")
+           
 
             message = Message.objects.create(
                 sender=sender,
@@ -76,7 +75,6 @@ class SendMessageConstituentView(APIView):
                 "message": "Message has been sent"
                 }
         except Exception as e:
-            print(e)
             response = {
                 "message":"sorry, something went wrong, try again."
             } 
@@ -105,7 +103,7 @@ class RetrieveProjectsView(APIView):
                     projects.append(project)
 
             except Exception as e:
-                print(e)
+                pass
             
 
             
@@ -130,7 +128,6 @@ class RetrieveProjectsView(APIView):
                 "data":data
                 }, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
             return Response({
                 "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "message":"Sorry something went wrong"})
@@ -169,7 +166,6 @@ class RNSendIncidentReportView(APIView):
             return Response(data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print(e)
             data = {
                 "status":status.HTTP_400_BAD_REQUEST,
                 "message":"Incident report was not sent."
@@ -209,7 +205,6 @@ class RNSendRequestFormView(APIView):
                 "message":"Request Form has been sent."
             }
         except Exception as e:
-            print(e)
             data = {
                 "status":status.HTTP_400_BAD_REQUEST,
                 "message":"Request Form was not sent."
@@ -247,12 +242,6 @@ class SetActiveConstituencyView(APIView):
             towns = Constituent.objects.get(user=user).town.all()
             areas = Constituent.objects.get(user=user).area.all()
 
-            print(towns)
-            print(areas)
-            
-
-            print(consts)
-
             if len(list(consts)) > 1:
 
                 try:
@@ -262,13 +251,9 @@ class SetActiveConstituencyView(APIView):
 
                     user.save()
 
-                    print("__________________ Done ______________------")
                     
                 except Exception as e:
-                    print(e)
-
-            
-
+                    pass
             data = {
                 "status":status.HTTP_200_OK,
                 "message":f"{constituency.name} is active."
@@ -276,7 +261,6 @@ class SetActiveConstituencyView(APIView):
             return Response(data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print(e)
             data = {
                 "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "message":"Sorry something went wrong, try again."
@@ -291,8 +275,6 @@ class GetUserInfoView(APIView):
 
         data = GetUserInfoSerializer(user)
 
-        print(data.data)
-
         return Response(data.data)
 
 class CommentOnProjectAndPostView(APIView):
@@ -302,7 +284,6 @@ class CommentOnProjectAndPostView(APIView):
 
         data.is_valid(raise_exception=True)
 
-        print(data['user_id'].value)
 
         try:
             user = User.objects.get(system_id_for_user=data['user_id'].value)
@@ -326,12 +307,8 @@ class CommentOnProjectAndPostView(APIView):
                 }
 
 
-        
-            print(data)
-
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
             data = {
                 "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "message":"Comment could not be sent, try again."
@@ -366,7 +343,6 @@ class RetriveMessageView(APIView):
 
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
 
             return Response()
 
@@ -404,7 +380,6 @@ class LikeProjectView(APIView):
 
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            print(e)
 
             data = {
                 "status":status.HTTP_400_BAD_REQUEST,
@@ -435,7 +410,6 @@ class ActionPlanView(APIView):
         a = []
         # keys_ = request.data.keys()
 
-        # print(keys_)
         
         try:
             ac_p = ActionPlanParticipants.objects.get(year=year,user=user)
@@ -453,8 +427,6 @@ class ActionPlanView(APIView):
             keys_ = request.data.keys()
             
             for key_ in keys_:
-                print(key_)
-                print(str(request.data[key_]))
                 act_plan = ActionPlanToAssemblyMan.objects.create(area=area,problem_title=str(request.data[key_]), constituency=constituency)
                 act_plan.total_participants = int(act_plan.total_participants) + 1
                 act_plan.total_rating = act_plan.total_rating + int(acp_values[key_])
@@ -582,7 +554,6 @@ class ApproveActionPlanView(APIView):
 
             return Response(data, status.HTTP_200_OK)
         except Exception as e:
-            print(e)
             data = {
                 "status":status.HTTP_400_BAD_REQUEST,
                 "message":f"Action plan summary of {user.active_area.name} was not approved, try again."
@@ -621,7 +592,6 @@ class RetrieveYearsView(APIView):
 
         years = list(set(years))
 
-        print(years)
 
         return Response({
             "status":status.HTTP_200_OK,
@@ -633,7 +603,6 @@ class GetActionPlanApprovedStatusView(APIView):
     permission_classes=()
 
     def post(self, request, id, year):
-        print(request.data)
         user = User.objects.get(system_id_for_user=id)
         data = ApproveActionPlanSerializer(data = request.data)
         data.is_valid(raise_exception=True)
@@ -703,7 +672,6 @@ class GetActionPlanApprovedStatusView(APIView):
 
                 return Response(data,status=status.HTTP_200_OK)
             except Exception as e:
-                print(e)
                 data = {
                     "status":status.HTTP_400_BAD_REQUEST,
                     "message":f"Action plan summary of {user.active_area.name} was not approved, try again."
@@ -866,11 +834,8 @@ class SendAssessmentView(APIView):
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(e)
 
             # Creating Projects assessment objects
-
-            print("------------4444444%%%%%%%%%%%%_______________________--")
 
             
             for project in data_['projects_assessment'].value.keys():
