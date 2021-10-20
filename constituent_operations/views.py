@@ -635,6 +635,8 @@ class GetActionPlanApprovedStatusView(APIView):
     def post(self, request, id, year):
         print(request.data)
         user = User.objects.get(system_id_for_user=id)
+        data = ApproveActionPlanSerializer(data = request.data)
+        data.is_valid(raise_exception=True)
       
         try:
             approved = ApprovedActionPlan.objects.get(user=user, year=year)
@@ -642,22 +644,17 @@ class GetActionPlanApprovedStatusView(APIView):
                 {
                     "status":status.HTTP_400_BAD_REQUEST,
                     "message":"Action Plan has already been Approved."
-                }
+                },
+                status=status.HTTP_400_BAD_REQUEST
             )
 
         except Exception:
-            approved = ApprovedActionPlan.objects.create(
-                user = user,
-                year = year
-            )
-
-            approved.save()
-
+            
             #data = ApproveActionPlanSerializer(data = request.data)
             #data.is_valid(raise_exception=True)
 
-            x = request.data['problem_titles']
-            y = request.data['stats']
+            x = data['problem_titles'].value
+            y = data['stats'].value
 
             # def addlabels(x,y):
             #     for i in range(len(x)):
@@ -696,6 +693,12 @@ class GetActionPlanApprovedStatusView(APIView):
                     "status":status.HTTP_200_OK,
                     "message":f"Action plan summary of {user.active_area.name} has been approved."
                 }
+                approved = ApprovedActionPlan.objects.create(
+                    user = user,
+                    year = year
+                )
+
+                approved.save()
 
 
                 return Response(data,status=status.HTTP_200_OK)
