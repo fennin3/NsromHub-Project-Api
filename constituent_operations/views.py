@@ -651,7 +651,7 @@ class GetActionPlanApprovedStatusView(APIView):
                 ap = ActionPlanAreaSummaryForMp.objects.create(
                     constituency = user.active_constituency,
                     area = user.active_area,
-                    comment = request.data['comment']
+                    comment = data['comment'].value
                 )
 
                 ap.image.save("stats_image.jpg", content_file)
