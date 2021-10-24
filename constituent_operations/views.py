@@ -651,7 +651,7 @@ class GetActionPlanApprovedStatusView(APIView):
                 ap = ActionPlanAreaSummaryForMp.objects.create(
                     constituency = user.active_constituency,
                     area = user.active_area,
-                    comment = request.data['comment']
+                    comment = data['comment'].value
                 )
 
                 ap.image.save("stats_image.jpg", content_file)
@@ -672,6 +672,7 @@ class GetActionPlanApprovedStatusView(APIView):
 
                 return Response(data,status=status.HTTP_200_OK)
             except Exception as e:
+                print(e)
                 data = {
                     "status":status.HTTP_400_BAD_REQUEST,
                     "message":f"Action plan summary of {user.active_area.name} was not approved, try again."
