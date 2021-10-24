@@ -244,9 +244,8 @@ class MPCreateApiView(CreateAPIView):
                     })
             else:
                 mp.save()
-                pass
+                sending_mail("(This is a testing mail)\nDear MP,\nWe will reach out to you to verify your identity and activate your account afterwards.\nt=Thank you.", "Omanapa MP Account Registration.", email)
 
-            
             return Response({
                 "status":status.HTTP_201_CREATED,
                 "message":"Account registration successful. Your account will be verified shortly.",

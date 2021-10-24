@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Comment(models.Model):
-    text = models.CharField(max_length=500)
+    text = models.CharField(max_length=5000)
     comment_from = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     date_posted = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 

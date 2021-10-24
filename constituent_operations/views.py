@@ -81,7 +81,6 @@ class SendMessageConstituentView(APIView):
 
         return Response(response, status=status.HTTP_200_OK)     
 
-
 class RetrieveProjectsView(APIView):
     permission_classes= ()
 
@@ -309,6 +308,7 @@ class CommentOnProjectAndPostView(APIView):
 
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
+            print(e)
             data = {
                 "status":status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "message":"Comment could not be sent, try again."
