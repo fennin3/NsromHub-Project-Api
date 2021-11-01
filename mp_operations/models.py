@@ -47,7 +47,8 @@ class AverageActionPlanStat(models.Model):
     total_value = models.IntegerField()
     date = models.DateField(auto_now_add=True)
 
-
+class Config(models.Model):
+    domain = models.CharField(max_length=50)
 
 
 

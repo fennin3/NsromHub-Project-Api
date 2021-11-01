@@ -61,6 +61,7 @@ class ConstituencySerializer(serializers.ModelSerializer):
         fields="__all__"
 
 class RegionSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model=Region
         fields="__all__"
@@ -103,7 +104,7 @@ class AssessmentSerializer(serializers.Serializer):
 class ApproveActionPlanSerializer(serializers.Serializer):
     problem_titles = serializers.ListField(child=serializers.CharField(max_length=100))
     stats = serializers.ListField(child=serializers.IntegerField())
-    comment = serializers.CharField(max_length=20000)
+    comment = serializers.CharField(max_length=20000, required=False)
 
 
 class ProblemForActionPlanSerializer(serializers.ModelSerializer):

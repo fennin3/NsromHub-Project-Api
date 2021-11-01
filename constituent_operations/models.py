@@ -27,6 +27,7 @@ class IncidentReport(models.Model):
     subject = models.CharField(max_length=500, null=True, blank=True)
     message = models.CharField(max_length=20000)
     attached_file = models.FileField(upload_to="Incident_file/", blank=True, null=True) 
+    date=models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 
     def __str__(self):
@@ -40,6 +41,7 @@ class RequestForm(models.Model):
     subject = models.CharField(max_length=500, null=True, blank=True)
     message = models.CharField(max_length=20000)
     attached_file = models.FileField(upload_to="Incident_file/", blank=True, null=True) 
+    date=models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 
     def __str__(self):

@@ -14,7 +14,7 @@ urlpatterns = [
     path("like-project/<id>/<post_id>/", LikeProjectView.as_view(), name="like_project"),
     path("send-action-plan/<id>/", ActionPlanView.as_view(), name="action_plan"),
     path("retrieve-action-plan-summary/<id>/<date>/", RetrieveActionPlanStatForAssemblyMan.as_view(), name="action_plan_summary"),
-    path("approve-action-plan/<id>/", ApproveActionPlanView.as_view(), name="approve_action"),
+    path("approve-action-plan/<id>/<date>/", ApproveActionPlanView.as_view(), name="approve_action"),
     path("action-titles/", RetrieveProblemTitlesView.as_view(), name="action_title"),
     path("retrieve-years/", RetrieveYearsView.as_view(), name="years"),
 
@@ -28,7 +28,10 @@ urlpatterns = [
     path("retrive-projects-for-assessment/<id>/<year>/", RetrieveProjectsForAssessmentView.as_view(), name="projects_for_assessment"),
     path("retrive-conducts-for-assessment/", RetrieveConductsForAssessmentView.as_view(), name="conducts_for_assessment"),
     path("send-assessment/<id>/", SendAssessmentView.as_view(), name="send_assessment"),
-    path("get-perm/<id>/", GetPermissions.as_view(), name="get_perm")
+    path("get-perm/<id>/", GetPermissions.as_view(), name="get_perm"),
+
+
+    path("retrieve-con-available/<id>/", GetAvailableConst.as_view(), name="a_cont")
 
 
 

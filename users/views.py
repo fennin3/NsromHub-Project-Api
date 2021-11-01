@@ -339,10 +339,6 @@ class SecondaryRegistration(UpdateAPIView):
             for i in consts:
                 ids.append(i.id)
 
-            
-
-                 
-            
             if request.data['constituency']  in ids:
                 data = {
                 "status":status.HTTP_400_BAD_REQUEST,

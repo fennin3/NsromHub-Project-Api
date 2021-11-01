@@ -327,9 +327,11 @@ class CheckIfMpIsAvailable(APIView):
         mp = User.objects.filter(active_constituency=user.active_constituency, is_mp=True)
 
         if len(mp) > 0:
+            mp = UserSerializer(mp[0])
             return Response({
                 "status":status.HTTP_200_OK,
-                "is_mp_available":True
+                "is_mp_available":True,
+                "mp":mp.data
             }
             )
         else:

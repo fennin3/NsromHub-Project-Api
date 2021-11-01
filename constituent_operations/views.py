@@ -2,7 +2,8 @@ import json
 import _thread
 from django.db.models import Q, Sum
 from django.core.files.base import ContentFile
-from users.models import Constituency, Constituent, UserPermissionCust
+from users.models import Constituency, Constituent, Region, UserPermissionCust
+from users.serializers import ListAllRegionsSerializer
 from constituent_operations.serializers import ApproveActionPlanSerializer , \
     CommentOnPostSerializer, GetUserInfoSerializer, ListProjectsOfMPs,PermSerializer2, ProblemForActionPlanSerializer, RNSendIncidentReportSerializer, RetrieveConstituentConstituenciesSerializer, RetrieveMessageSerializer, \
     SendMessageSerializer, RNSendRequestFormSerializer, ConductForAssessmentSerializer, AssessmentSerializer
@@ -42,7 +43,6 @@ class SendMessageConstituentView(APIView):
     permission_classes = ()
     def post(self, request):
         data = SendMessageSerializer(data= request.data)
-
         data.is_valid(raise_exception=True)
 
         sender = data['sender_id'].value
@@ -143,21 +143,33 @@ class RNSendIncidentReportView(APIView):
             # receiver = User.objects.get(id=data['receiver'].value)
             const = sender.active_constituency
             receiver = None
+            
 
-            for user in const.members.all():
-                if user.is_mp:
-                    receiver = user
-                    break
+            mp = User.objects.filter(active_constituency=const,is_mp=True)
 
-            incident = IncidentReport.objects.create(
-                sender=sender,
-                receiver = receiver,
-                subject=data['subject'].value,
-                message=data['message'].value,
-                attached_file=data['attached_file'].value 
-            )
+            if mp.count() > 0:
+                receiver = mp.first()
 
-            incident.save()
+            try:
+                a = request.data['attached_file']
+                incident = IncidentReport.objects.create(
+                    sender=sender,
+                    receiver = receiver,
+                    subject=data['subject'].value,
+                    message=data['message'].value,
+                    attached_file=request.data['attached_file'] or None
+                )
+                incident.save()
+            except Exception:
+                incident = IncidentReport.objects.create(
+                    sender=sender,
+                    receiver = receiver,
+                    subject=data['subject'].value,
+                    message=data['message'].value,
+                    attached_file=None
+                )
+                incident.save()
+            
             data = {
                 "status":status.HTTP_200_OK,
                 "message":"Incident report has been sent."
@@ -185,20 +197,35 @@ class RNSendRequestFormView(APIView):
             const = sender.active_constituency
             receiver = None
 
-            for user in const.members.all():
-                if user.is_mp:
-                    receiver = user
-                    break
+            mp = User.objects.filter(active_constituency=const,is_mp=True)
 
-            requestform = RequestForm.objects.create(
-                sender=sender,
-                receiver = receiver,
-                subject=data['subject'].value,
-                message=data['message'].value,
-                attached_file=data['attached_file'].value 
-            )
+            if mp.count() > 0:
+                receiver = mp.first()
 
-            requestform.save()
+            try:
+                a = request.data['attached_file']
+
+                requestform = RequestForm.objects.create(
+                    sender=sender,
+                    receiver = receiver,
+                    subject=data['subject'].value,
+                    message=data['message'].value,
+                    attached_file=request.data['attached_file']
+                )
+
+                requestform.save()
+            except Exception:
+                requestform = RequestForm.objects.create(
+                    sender=sender,
+                    receiver = receiver,
+                    subject=data['subject'].value,
+                    message=data['message'].value,
+                    attached_file= None
+                )
+
+                requestform.save()
+
+
             data = {
                 "status":status.HTTP_200_OK,
                 "message":"Request Form has been sent."
@@ -337,14 +364,17 @@ class RetriveMessageView(APIView):
 
             data = {
                 "status":status.HTTP_200_OK,
-                "this":len(data.data),
                 "messages":data.data
             }
 
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-
-            return Response()
+            data = {
+                "status":status.HTTP_400_BAD_REQUEST,
+          
+                "message":"Sorry, something went wrong"
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -635,9 +665,7 @@ class GetActionPlanApprovedStatusView(APIView):
             
 
             try:
-                app_ = ApprovedActionPlan.objects.create(year=year, user=user)
-
-                app_.save()
+                
                 figure = BytesIO()
             
                 plt.bar(x, y)
@@ -816,8 +844,16 @@ class SendAssessmentView(APIView):
     permission_classes=()
 
     def post(self, request, id):
-        user = User.objects.get(system_id_for_user=id)
-        const = user.active_constituency
+        try:
+            user = User.objects.get(system_id_for_user=id)
+            const = user.active_constituency
+        except:
+            data = {
+            "status":status.HTTP_400_BAD_REQUEST,
+            "message":"Sorry, something went wrong."
+            }
+
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         data_ = AssessmentSerializer(request.data)
 
@@ -899,3 +935,21 @@ class GetPermissions(APIView):
             "data":perms,
             "len":user.system_id_for_user
         })
+
+class GetAvailableConst(APIView):
+    permission_classes=()
+    
+    def get(self, request, id):
+        user = User.objects.get(system_id_for_user=id)
+        reg = user.region.all()[0]
+
+        regions = Region.objects.filter(country=reg.country)
+
+        regions = ListAllRegionsSerializer(regions, many=True)
+
+        return Response(
+            {
+                "status":status.HTTP_200_OK,
+                "data":regions.data
+            }
+        )

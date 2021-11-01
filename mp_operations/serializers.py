@@ -1,8 +1,9 @@
 from constituent_operations.models import IncidentReport, Message, RequestForm
 from rest_framework import serializers
+
 from .models import ActionPlanAreaSummaryForMp, Project, Comment
 from django.contrib.auth import get_user_model
-from users.models import Constituent, SubAdminPermission, Town, Area
+from users.models import Constituency, Constituent, SubAdminPermission, Town, Area
 from users.serializers import ListAllAreaSerializer, ListAllConstituencySerializer
 
 
@@ -10,12 +11,17 @@ from users.serializers import ListAllAreaSerializer, ListAllConstituencySerializ
 
 User = get_user_model()
 
+class ConstituencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Constituency
+        fields="__all__"
+
 
 class UserSerializer(serializers.ModelSerializer):
-
+    active_constituency= ConstituencySerializer(read_only=True)
     class Meta:
         model = User
-        fields = ['id','is_active','is_mp','is_constituent','is_security_person','is_assembly_man','is_medical_center', 'is_subadmin','full_name','profile_picture', 'email', 'contact', 'date_of_birth', 'system_id_for_user', 'country', 'region', 'constituency', "subadmin_for"]
+        fields = ['id','is_active','is_mp','is_constituent','is_security_person','is_assembly_man','is_medical_center', 'is_subadmin','full_name','profile_picture', 'email', 'contact', 'date_of_birth', 'system_id_for_user', 'country', 'region', 'constituency', "subadmin_for", "active_constituency"]
 
 class SubAdminPermissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -157,6 +163,6 @@ class RetrieveActionPlanSummaryEachAreaForMPSerializer(serializers.ModelSerializ
 class CreatePostSerializer(serializers.Serializer):
 
     user_id = serializers.CharField(max_length=15)
-    media = serializers.FileField()
+    media = serializers.FileField(required=False)
     caption = serializers.CharField(max_length=5000)
 

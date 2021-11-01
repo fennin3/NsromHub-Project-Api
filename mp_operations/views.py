@@ -3,7 +3,7 @@
 from constituent_operations.models import IncidentReport, Message, RequestForm
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from mp_operations.models import ActionPlanAreaSummaryForMp, Project, User
+from mp_operations.models import ActionPlanAreaSummaryForMp, Config, Project, User
 from rest_framework.generics import CreateAPIView, ListAPIView
 from .serializers import CreateProjectSerializer, ListConstituentsSerializer, ListProjectSerializer, \
     MPRetrieveAllSubAdminSerializer, RNRetrieveIncidentReportSerializer, RNRetrieveMessageSerializer, \
@@ -109,7 +109,9 @@ class ListConstituentsForMpView(APIView):
         user = User.objects.get(system_id_for_user=id)
         constituency = user.active_constituency
 
-        data = ListConstituentsSerializer(constituency.members, many=True).data
+        members = [member for member in constituency.members.all() if constituency in member.constituency.all() and member != user]
+        
+        data = ListConstituentsSerializer(members, many=True).data
 
         data = {
             'data':data
@@ -126,11 +128,14 @@ class SendEmailView(APIView):
             data = SendEmailSerializer(data=request.data)
 
             data.is_valid(raise_exception=True)
-
+            attached_file = None
             user_id = data['user_id'].value
             subject = data['subject'].value
             message = data['message'].value
-            attached_file = data['attached_file']
+            try:
+                attached_file = request.data['attached_file']
+            except Exception:
+                pass
 
             mp = User.objects.get(system_id_for_user=user_id)
 
@@ -155,21 +160,23 @@ class SendEmailView(APIView):
 
             
 
-            if request.data['attached_file']:
-                attached_file=request.data['attached_file']
+            if attached_file is not None: 
                 mail.attach(attached_file.name, attached_file.read(), attached_file.content_type)
             
             mail.send()
             data = {
+                "status":status.HTTP_200_OK,
                 "message":"Email has been sent successfully"
             }
+            return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             
             data = {
-                "message":f"Sorry something went wrong, try again. {e}"
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":f"Sorry something went wrong, try again."
             }
 
-        return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         
 class ProjectsSearchEngineView(ListAPIView):
@@ -204,7 +211,7 @@ class ConstituentsSearchEngineView(ListAPIView):
 class RetrieveIncidentReportView(APIView):
     permission_classes=()
     def get(self, request, id):
-        incident_reports = IncidentReport.objects.filter(receiver__system_id_for_user=id)
+        incident_reports = IncidentReport.objects.filter(receiver__system_id_for_user=id).order_by('-date')
         data = RNRetrieveIncidentReportSerializer(incident_reports,many=True)
 
         # data.is_valid(raise_exception=True)
@@ -235,7 +242,7 @@ class RetrieveRequestNotificationsView(APIView):
     permission_classes=()
     def get(self, request, id):
 
-        incident_reports = IncidentReport.objects.filter(receiver__system_id_for_user=id)
+        incident_reports = IncidentReport.objects.filter(receiver__system_id_for_user=id).order_by('-date')
         incident_reports = RNRetrieveIncidentReportSerializer(incident_reports,many=True)
 
 
@@ -325,6 +332,7 @@ class SendEmailToConstView(APIView):
     permission_classes=()
 
     def post(self, request):
+        print(request.data)
         try:
             data = SendEmailToConstSerializer(data=request.data)
             data.is_valid(raise_exception=True)
@@ -347,16 +355,15 @@ class SendEmailToConstView(APIView):
                 [receiver.email]
             )
 
-
-            if request.data["attached_file"]:
+            attached_file=None
+            try:
+                
                 
                 attached_file = request.data["attached_file"]
-
                 mail.attach(attached_file.name, attached_file.read(), attached_file.content_type)
-            else:
-                print("--------------------------------------")
-                print("NOT Adding file")
-                print(request.data)
+            except Exception:
+                pass
+            
             
             mail.send()
 
@@ -407,12 +414,14 @@ class MakeSubAdminView(APIView):
             mp = User.objects.get(system_id_for_user=id)
             user = User.objects.get(system_id_for_user=subadmin_id)
             const = user.more_info
+            print(user.is_subadmin)
             const.is_subadmin=True
             user.is_subadmin=True
             user.subadmin_for=mp.active_constituency
             const.subadmin_for=mp
 
             const.save()
+            user.save()
 
             permissions = SubAdminPermission.objects.create(
                 sub_admin=const,
@@ -820,7 +829,7 @@ class AllUsersInACountry(APIView):
     permission_classes = ()
 
     def get(self, request, country):
-        users = User.objects.filter(country=country)
+        users = User.objects.filter(is_mp=False)
         data = UserSerializer(users, many=True)
         return Response ({
             "status":status.HTTP_200_OK,
@@ -832,68 +841,24 @@ class ShareAsPostView(APIView):
     permission_classes=()
 
     def post(self, request, id):
-        user = User.objects.get(system_id_for_user=id)
+        try:
+            user = User.objects.get(system_id_for_user=id)
 
 
-        area = request.data['area']
+            area = request.data['area']
 
-        image = requests.get(request.data['image']).content
-
-        title = f"{area} Action Plan Summary"
-
-        comment = request.data['comment']
-
-        image = ContentFile(image)
-
-        project = Project.objects.create(
-            mp = user,
-            name = title,
-            description = comment,
-            place = area,
-            is_post=True
-        )
-
-        project.media.save("shared_data.jpg", image)
-
-        project.save()
-
-
-        data = {
-            "status":status.HTTP_200_OK,
-            "message":f"{area} Action Plan Summary has been shared."
-        }
-
-        return Response(data,status=status.HTTP_200_OK)
-
-class ShareAllAtOnce(APIView):
-    permission_classes=()
-
-    def post(self, request, id, date):
-        user = User.objects.get(system_id_for_user=id)
-
-        action_plans = ActionPlanAreaSummaryForMp.objects.filter(date__year=date, area=user.active_area, constituency=user.active_constituency)
-        data = RetrieveActionPlanSummaryEachAreaForMPSerializer(action_plans, many=True)
-
-
-        print("**********************************")
-        print(data.data)
-
-
-        for action_plan in data.data:
-            area = action_plan['area']['name']
-
-            image = requests.get(str(action_plan['image'])).content
+            image = requests.get(request.data['image']).content
 
             title = f"{area} Action Plan Summary"
 
-            # comment = request.data['comment']
+            comment = request.data['comment']
 
             image = ContentFile(image)
 
             project = Project.objects.create(
                 mp = user,
                 name = title,
-                # description = ,
+                description = comment,
                 place = area,
                 is_post=True
             )
@@ -903,18 +868,79 @@ class ShareAllAtOnce(APIView):
             project.save()
 
 
-        data = {
-            "status":status.HTTP_200_OK,
-            "message":f"Action Plan Summaries has been shared."
-        }
+            data = {
+                "status":status.HTTP_200_OK,
+                "message":f"{area} Action Plan Summary has been shared."
+            }
 
-        return Response(data,status=status.HTTP_200_OK)
+            return Response(data,status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(e)
+            data = {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":"Sorry, something went wrong."
+            }
+
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class ShareAllAtOnce(APIView):
+    permission_classes=()
+
+    def post(self, request, id, date):
+        try:
+            print(date)
+            user = User.objects.get(system_id_for_user=id)
+            config = Config.objects.all().first()
+            action_plans = ActionPlanAreaSummaryForMp.objects.filter(date__year=date, constituency=user.active_constituency)
+            data = RetrieveActionPlanSummaryEachAreaForMPSerializer(action_plans, many=True)
+
+            for action_plan in data.data:
+                area = action_plan['area']['name']
+
+                image = requests.get(config.domain + str(action_plan['image'])).content
+
+                title = f"{area} Action Plan Summary"
+
+                # comment = request.data['comment']
+
+                image = ContentFile(image)
+
+                project = Project.objects.create(
+                    mp = user,
+                    name = title,
+                    place = area,
+                    is_post=True
+                )
+
+                project.media.save("shared_data.jpg", image)
+
+                project.save()
+
+
+            data = {
+                "status":status.HTTP_200_OK,
+                "message":f"Action Plan Summaries has been shared."
+            }
+
+            return Response(data,status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            data = {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":"Sorry, something went wrong"
+            }
+
+            return Response(data,status=status.HTTP_400_BAD_REQUEST)
 
 
 class RetrieveAssessmentView(APIView):
     permission_classes=()
 
     def get(self, request, id, year):
+        print(year)
         user = User.objects.get(system_id_for_user=id)
         const = user.active_constituency
         # project_names
@@ -929,7 +955,8 @@ class RetrieveAssessmentView(APIView):
 
         for project in projects:
             assessments = Assessment.objects.filter(constituency=const, date__year=year, project=project).values('assessment').annotate(total_num=Count('assessment'))
-            print(assessments)
+            # assessments2 = Assessment.objects.filter(constituency=const, date__year=year, project=project).values()
+
 
             ass_names = []
             ass_value = []
@@ -953,7 +980,10 @@ class RetrieveAssessmentView(APIView):
                 "assessment_values":ass_value
             })
 
+            print(data_projects)
 
+        # print(ass_names)
+        # print(ass_value)
 
 
         
@@ -961,7 +991,7 @@ class RetrieveAssessmentView(APIView):
 
         for i in conds:
             
-            cond_ass = ConductAssessment.objects.filter(constituency=const, conduct=i.title).values('assessment').annotate(total_num=Count('assessment'))
+            cond_ass = ConductAssessment.objects.filter(date__year=year,constituency=const, conduct=i.title).values('assessment').annotate(total_num=Count('assessment'))
 
             cond_names =[]
             cond_value=[]
@@ -1079,7 +1109,6 @@ class RetrieveMessages(APIView):
 
             data = {
                 "status":status.HTTP_200_OK,
-                "this":len(data.data),
                 "messages":data.data
             }
 
@@ -1207,32 +1236,37 @@ class SendEmailToAreaView(APIView):
             )
 
             
-
-            if request.data['attached_file']:
+            attached_file = None
+            try:
                 attached_file=request.data['attached_file']
                 mail.attach(attached_file.name, attached_file.read(), attached_file.content_type)
-            
+            except Exception:
+                pass
             mail.send()
             data = {
+                "status":status.HTTP_200_OK,
                 "message":"Email has been sent successfully"
             }
+            return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
             
             data = {
-                "message":f"Sorry something went wrong, try again. {e}"
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":f"Sorry something went wrong, try again."
             }
 
-        return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangeConstituencyStatus(APIView):
     permission_classes=()
 
     def post(self, request,mpid, id, status_):
+        print(status_)
         dd = {
             "ass":"Assembly Man",
             "med":"Medical Center",
             "sec":"Security Personnel",
-            "regular":"Reguar"
+            "regular":"Regular"
         }
         try:
             mp = User.objects.get(system_id_for_user=mpid)
@@ -1277,7 +1311,7 @@ class ChangeConstituencyStatus(APIView):
             return  Response(
                 {
                     "status":status.HTTP_200_OK,
-                    "message":f"{user.full_name}'s staus has been switched to {dd[status_]}"
+                    "message":f"{user.full_name}'s status has been switched to {dd[status_]}"
                 },
                 status=status.HTTP_200_OK
             )
@@ -1288,7 +1322,7 @@ class ChangeConstituencyStatus(APIView):
                     "status":status.HTTP_400_BAD_REQUEST,
                     "message":"Sorry, something went wrong."
                 },
-                status=status.status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_400_BAD_REQUEST
             )
 
 
