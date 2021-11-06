@@ -161,7 +161,6 @@ class RetrieveActionPlanSummaryEachAreaForMPSerializer(serializers.ModelSerializ
 
 
 class CreatePostSerializer(serializers.Serializer):
-
     user_id = serializers.CharField(max_length=15)
     media = serializers.FileField(required=False)
     caption = serializers.CharField(max_length=5000)

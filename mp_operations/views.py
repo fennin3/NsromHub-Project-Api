@@ -109,7 +109,7 @@ class ListConstituentsForMpView(APIView):
         user = User.objects.get(system_id_for_user=id)
         constituency = user.active_constituency
 
-        members = [member for member in constituency.members.all() if constituency in member.constituency.all() and member != user]
+        members = [member for member in constituency.members.all() if constituency in member.constituency.all() and member.is_constituent]
         
         data = ListConstituentsSerializer(members, many=True).data
 
@@ -138,6 +138,11 @@ class SendEmailView(APIView):
                 pass
 
             mp = User.objects.get(system_id_for_user=user_id)
+
+            if mp.is_subadmin:
+                sender = User.objects.filter(active_constituency=mp.active_constituency, is_mp=True)
+                if len(sender) > 0:
+                    mp = sender[0]
 
             constituency = mp.active_constituency
 
@@ -344,6 +349,12 @@ class SendEmailToConstView(APIView):
             
 
             sender = User.objects.get(system_id_for_user=sender)
+
+            if sender.is_subadmin:
+                sender = User.objects.filter(active_constituency=sender.active_constituency, is_mp=True)
+                if len(sender) > 0:
+                    sender = sender[0]
+
             receiver = User.objects.get(system_id_for_user=receiver)
 
 

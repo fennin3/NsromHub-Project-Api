@@ -126,4 +126,56 @@ class RetrieveAssessmentSwitchStatus(APIView):
             return Response(data, status.HTTP_400_BAD_REQUEST)
 
 
+class RetrieveShowNoticeStatus(APIView):
+    permission_classes=()
+    def get(self, request):
+        try:
+            shownotice = GeneralOperationsSwitch.objects.all().first()
+
+            shownotice = shownotice.acshow_notice
+
+            data = {
+                "status": status.HTTP_200_OK,
+                "message":"Successful",
+                "show_notice":shownotice
+            }
+
+            return Response(data, status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+
+            data = {
+                "status": status.HTTP_400_BAD_REQUEST,
+                "error":str(e),
+                "message":"Sorry, something went wrong." 
+            }
+            return Response(data, status.HTTP_400_BAD_REQUEST)
+
+
+
+class RetrieveShowAssNoticeStatus(APIView):
+    permission_classes=()
+    def get(self, request):
+        try:
+            shownotice = GeneralOperationsSwitch.objects.all().first()
+
+            shownotice = shownotice.asshow_notice
+
+            data = {
+                "status": status.HTTP_200_OK,
+                "message":"Successful",
+                "show_notice":shownotice
+            }
+
+            return Response(data, status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+
+            data = {
+                "status": status.HTTP_400_BAD_REQUEST,
+                "error":str(e),
+                "message":"Sorry, something went wrong." 
+            }
+            return Response(data, status.HTTP_400_BAD_REQUEST)
+
 

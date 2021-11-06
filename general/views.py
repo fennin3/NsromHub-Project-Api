@@ -179,7 +179,7 @@ class UnreadsView(APIView):
 
         
 
-        if user.is_mp:
+        if user.is_mp or (user.is_subadmin and user.active_constituency == user.subadmin_for):
             incidents = IncidentReport.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
             requests_ = RequestForm.objects.filter(sender__active_constituency=user.active_constituency, receiver__active_constituency=user.active_constituency, read=False).count()
             messages = Message.objects.filter(receiver=user, sender__active_constituency=mp.active_constituency, read=False)

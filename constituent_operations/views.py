@@ -759,6 +759,47 @@ class CreateProjectForMP(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class CreatePostForMP(APIView):
+    permission_classes=()
+
+    def post(self, request):
+        try:
+            user_id = request.data['user_id']
+
+            user = User.objects.get(system_id_for_user=user_id)
+
+            user_info = user.more_info
+
+            mp = user_info.subadmin_for
+
+            project = Project.objects.create(
+                mp= mp,
+                description=request.data.get('caption', None),
+                media = request.data.get('media', None),
+                is_post=True
+            )
+            project.save()
+
+            data = {
+                "status":status.HTTP_200_OK,
+                "message":"Post has been created."
+            }
+
+            return Response(data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(e)
+            data = {
+                "status":status.HTTP_400_BAD_REQUEST,
+                "message":"Sorry something went wrong."
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 class ReplyNotification(APIView):
     permission_classes = ()
 

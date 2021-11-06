@@ -4,6 +4,8 @@ class GeneralOperationsSwitch(models.Model):
     open_action_plan = models.BooleanField(default=False)
     open_forum = models.BooleanField(default=False)
     open_assessment = models.BooleanField(default=False)
+    acshow_notice = models.BooleanField(default=False)
+    asshow_notice = models.BooleanField(default=False)
     
 
     def __str__(self):
